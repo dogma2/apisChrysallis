@@ -1,0 +1,999 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="EEVAPPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ASISTENTES">
+          <Key>
+            <PropertyRef Name="ideevento" />
+            <PropertyRef Name="idusuario" />
+          </Key>
+          <Property Name="ideevento" Type="int" Nullable="false" />
+          <Property Name="idusuario" Type="int" Nullable="false" />
+          <Property Name="inscritosqtty" Type="tinyint" />
+          <Property Name="asistentesqtty" Type="tinyint" />
+          <Property Name="valoracion" Type="tinyint" />
+          <Property Name="comentarios" Type="varchar" MaxLength="250" />
+          <Property Name="ctrlvaloracion" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="CCAA">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="tinyint" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="DATOSINTERES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" />
+          <Property Name="descripcion" Type="text" />
+          <Property Name="direccion" Type="varchar" MaxLength="250" />
+          <Property Name="ciudad" Type="varchar" MaxLength="150" />
+          <Property Name="cp" Type="char" MaxLength="5" />
+          <Property Name="idprovincia" Type="tinyint" />
+          <Property Name="idccaa" Type="tinyint" />
+          <Property Name="telefono" Type="varchar" MaxLength="15" />
+          <Property Name="email" Type="varchar" MaxLength="150" />
+          <Property Name="contacto" Type="varchar" MaxLength="150" />
+          <Property Name="ctrlglobal" Type="tinyint" />
+          <Property Name="iddelegacion" Type="int" />
+          <Property Name="iddsktuser" Type="int" />
+        </EntityType>
+        <EntityType Name="DELEGACIONES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="nombre" Type="varchar" MaxLength="100" />
+          <Property Name="direccion" Type="varchar" MaxLength="250" />
+          <Property Name="ciudad" Type="varchar" MaxLength="100" />
+          <Property Name="cp" Type="varchar" MaxLength="50" />
+          <Property Name="idprovincia" Type="tinyint" />
+          <Property Name="idccaa" Type="tinyint" />
+          <Property Name="telefono" Type="varchar" MaxLength="15" />
+          <Property Name="email" Type="varchar" MaxLength="150" />
+          <Property Name="contacto" Type="varchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="DOCUMENTOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ciddocumento" Type="varchar" MaxLength="20" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="idevento" Type="int" />
+          <Property Name="titulo" Type="varchar" MaxLength="250" />
+          <Property Name="descripcion" Type="text" />
+          <Property Name="iddsktuser" Type="int" />
+        </EntityType>
+        <EntityType Name="DSKTUSERS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="nickname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="128" />
+          <Property Name="nombre" Type="varchar" MaxLength="150" />
+          <Property Name="email" Type="varchar" MaxLength="150" />
+          <Property Name="idprovincia" Type="tinyint" />
+          <Property Name="idccaa" Type="tinyint" />
+          <Property Name="iddelegacion" Type="int" Nullable="false" />
+          <Property Name="ctrlmaster" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="EVENTOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cidevento" Type="varchar" MaxLength="20" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="titulo" Type="varchar" MaxLength="250" />
+          <Property Name="intro" Type="text" />
+          <Property Name="descripcion" Type="text" />
+          <Property Name="fechainicio" Type="date" />
+          <Property Name="horainicio" Type="time" Precision="7" />
+          <Property Name="fechafin" Type="date" />
+          <Property Name="horafin" Type="time" Precision="7" />
+          <Property Name="imagen" Type="image" />
+          <Property Name="notasevento" Type="text" />
+          <Property Name="notastransporte" Type="text" />
+          <Property Name="idccaa" Type="tinyint" />
+          <Property Name="idprovincia" Type="tinyint" />
+          <Property Name="ciudad" Type="varchar" MaxLength="100" />
+          <Property Name="coordgps" Type="varchar" MaxLength="50" />
+          <Property Name="ctrlglobal" Type="tinyint" />
+          <Property Name="iddelegacion" Type="int" />
+          <Property Name="iddsktuser" Type="int" />
+        </EntityType>
+        <EntityType Name="IDIOMAS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="char" MaxLength="2" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="PROVINCIAS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="tinyint" Nullable="false" />
+          <Property Name="nombre" Type="varchar" MaxLength="50" />
+          <Property Name="idccaa" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="USUARIOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="estado" Type="tinyint" />
+          <Property Name="cidapp" Type="nchar" MaxLength="10" />
+          <Property Name="idsocio" Type="varchar" MaxLength="16" />
+          <Property Name="email" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="imei" Type="varchar" MaxLength="18" />
+          <Property Name="fechaestado" Type="int" />
+          <Property Name="notaestado" Type="varchar" MaxLength="250" />
+          <Property Name="iddelegacion" Type="int" />
+          <Property Name="iddsktuser" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_ASISTENTES_EVENTOS">
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="1" />
+          <End Role="ASISTENTES" Type="Self.ASISTENTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EVENTOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ASISTENTES">
+              <PropertyRef Name="ideevento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ASISTENTES_USUARIOS">
+          <End Role="USUARIOS" Type="Self.USUARIOS" Multiplicity="1" />
+          <End Role="ASISTENTES" Type="Self.ASISTENTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ASISTENTES">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_PROVINCIAS">
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVINCIAS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="idprovincia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENTOS_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="DOCUMENTOS" Type="Self.DOCUMENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DOCUMENTOS">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENTOS_EVENTOS1">
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="0..1" />
+          <End Role="DOCUMENTOS" Type="Self.DOCUMENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EVENTOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DOCUMENTOS">
+              <PropertyRef Name="idevento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DSKTUSERS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="1" />
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DSKTUSERS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_PROVINCIAS">
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVINCIAS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="idprovincia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PROVINCIAS_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PROVINCIAS">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USUARIOS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="USUARIOS" Type="Self.USUARIOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="USUARIOS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EEVAPPModelStoreContainer">
+          <EntitySet Name="ASISTENTES" EntityType="Self.ASISTENTES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CCAA" EntityType="Self.CCAA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DATOSINTERES" EntityType="Self.DATOSINTERES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DELEGACIONES" EntityType="Self.DELEGACIONES" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOCUMENTOS" EntityType="Self.DOCUMENTOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DSKTUSERS" EntityType="Self.DSKTUSERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EVENTOS" EntityType="Self.EVENTOS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IDIOMAS" EntityType="Self.IDIOMAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROVINCIAS" EntityType="Self.PROVINCIAS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USUARIOS" EntityType="Self.USUARIOS" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ASISTENTES_EVENTOS" Association="Self.FK_ASISTENTES_EVENTOS">
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+            <End Role="ASISTENTES" EntitySet="ASISTENTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ASISTENTES_USUARIOS" Association="Self.FK_ASISTENTES_USUARIOS">
+            <End Role="USUARIOS" EntitySet="USUARIOS" />
+            <End Role="ASISTENTES" EntitySet="ASISTENTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_CCAA" Association="Self.FK_DATOSINTERES_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_DELEGACIONES" Association="Self.FK_DATOSINTERES_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_DSKTUSERS" Association="Self.FK_DATOSINTERES_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_PROVINCIAS" Association="Self.FK_DATOSINTERES_PROVINCIAS">
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENTOS_DSKTUSERS" Association="Self.FK_DOCUMENTOS_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="DOCUMENTOS" EntitySet="DOCUMENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENTOS_EVENTOS1" Association="Self.FK_DOCUMENTOS_EVENTOS1">
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+            <End Role="DOCUMENTOS" EntitySet="DOCUMENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DSKTUSERS_DELEGACIONES" Association="Self.FK_DSKTUSERS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_CCAA" Association="Self.FK_EVENTOS_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_DELEGACIONES" Association="Self.FK_EVENTOS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_DSKTUSERS" Association="Self.FK_EVENTOS_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_PROVINCIAS" Association="Self.FK_EVENTOS_PROVINCIAS">
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PROVINCIAS_CCAA" Association="Self.FK_PROVINCIAS_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USUARIOS_DELEGACIONES" Association="Self.FK_USUARIOS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="USUARIOS" EntitySet="USUARIOS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EEVAPPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ASISTENTES">
+          <Key>
+            <PropertyRef Name="ideevento" />
+            <PropertyRef Name="idusuario" />
+          </Key>
+          <Property Name="ideevento" Type="Int32" Nullable="false" />
+          <Property Name="idusuario" Type="Int32" Nullable="false" />
+          <Property Name="inscritosqtty" Type="Byte" />
+          <Property Name="asistentesqtty" Type="Byte" />
+          <Property Name="valoracion" Type="Byte" />
+          <Property Name="comentarios" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ctrlvaloracion" Type="Byte" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_ASISTENTES_EVENTOS" FromRole="ASISTENTES" ToRole="EVENTOS" />
+          <NavigationProperty Name="USUARIOS" Relationship="Self.FK_ASISTENTES_USUARIOS" FromRole="ASISTENTES" ToRole="USUARIOS" />
+        </EntityType>
+        <EntityType Name="CCAA">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Byte" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DATOSINTERES" Relationship="Self.FK_DATOSINTERES_CCAA" FromRole="CCAA" ToRole="DATOSINTERES" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_EVENTOS_CCAA" FromRole="CCAA" ToRole="EVENTOS" />
+          <NavigationProperty Name="PROVINCIAS" Relationship="Self.FK_PROVINCIAS_CCAA" FromRole="CCAA" ToRole="PROVINCIAS" />
+        </EntityType>
+        <EntityType Name="DATOSINTERES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="nombre" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ciudad" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="cp" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+          <Property Name="idprovincia" Type="Byte" />
+          <Property Name="idccaa" Type="Byte" />
+          <Property Name="telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="contacto" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ctrlglobal" Type="Byte" />
+          <Property Name="iddelegacion" Type="Int32" />
+          <Property Name="iddsktuser" Type="Int32" />
+          <NavigationProperty Name="CCAA" Relationship="Self.FK_DATOSINTERES_CCAA" FromRole="DATOSINTERES" ToRole="CCAA" />
+          <NavigationProperty Name="DELEGACIONES" Relationship="Self.FK_DATOSINTERES_DELEGACIONES" FromRole="DATOSINTERES" ToRole="DELEGACIONES" />
+          <NavigationProperty Name="DSKTUSERS" Relationship="Self.FK_DATOSINTERES_DSKTUSERS" FromRole="DATOSINTERES" ToRole="DSKTUSERS" />
+          <NavigationProperty Name="PROVINCIAS" Relationship="Self.FK_DATOSINTERES_PROVINCIAS" FromRole="DATOSINTERES" ToRole="PROVINCIAS" />
+        </EntityType>
+        <EntityType Name="DELEGACIONES">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="direccion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ciudad" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="cp" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idprovincia" Type="Byte" />
+          <Property Name="idccaa" Type="Byte" />
+          <Property Name="telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="contacto" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DATOSINTERES" Relationship="Self.FK_DATOSINTERES_DELEGACIONES" FromRole="DELEGACIONES" ToRole="DATOSINTERES" />
+          <NavigationProperty Name="DSKTUSERS" Relationship="Self.FK_DSKTUSERS_DELEGACIONES" FromRole="DELEGACIONES" ToRole="DSKTUSERS" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_EVENTOS_DELEGACIONES" FromRole="DELEGACIONES" ToRole="EVENTOS" />
+          <NavigationProperty Name="USUARIOS" Relationship="Self.FK_USUARIOS_DELEGACIONES" FromRole="DELEGACIONES" ToRole="USUARIOS" />
+        </EntityType>
+        <EntityType Name="DOCUMENTOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ciddocumento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="idevento" Type="Int32" />
+          <Property Name="titulo" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="iddsktuser" Type="Int32" />
+          <NavigationProperty Name="DSKTUSERS" Relationship="Self.FK_DOCUMENTOS_DSKTUSERS" FromRole="DOCUMENTOS" ToRole="DSKTUSERS" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_DOCUMENTOS_EVENTOS1" FromRole="DOCUMENTOS" ToRole="EVENTOS" />
+        </EntityType>
+        <EntityType Name="DSKTUSERS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="nickname" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="idprovincia" Type="Byte" />
+          <Property Name="idccaa" Type="Byte" />
+          <Property Name="iddelegacion" Type="Int32" Nullable="false" />
+          <Property Name="ctrlmaster" Type="Byte" />
+          <NavigationProperty Name="DATOSINTERES" Relationship="Self.FK_DATOSINTERES_DSKTUSERS" FromRole="DSKTUSERS" ToRole="DATOSINTERES" />
+          <NavigationProperty Name="DELEGACIONES" Relationship="Self.FK_DSKTUSERS_DELEGACIONES" FromRole="DSKTUSERS" ToRole="DELEGACIONES" />
+          <NavigationProperty Name="DOCUMENTOS" Relationship="Self.FK_DOCUMENTOS_DSKTUSERS" FromRole="DSKTUSERS" ToRole="DOCUMENTOS" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_EVENTOS_DSKTUSERS" FromRole="DSKTUSERS" ToRole="EVENTOS" />
+        </EntityType>
+        <EntityType Name="EVENTOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cidevento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="titulo" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="intro" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="fechainicio" Type="DateTime" Precision="0" />
+          <Property Name="horainicio" Type="Time" Precision="7" />
+          <Property Name="fechafin" Type="DateTime" Precision="0" />
+          <Property Name="horafin" Type="Time" Precision="7" />
+          <Property Name="imagen" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="notasevento" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="notastransporte" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="idccaa" Type="Byte" />
+          <Property Name="idprovincia" Type="Byte" />
+          <Property Name="ciudad" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="coordgps" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ctrlglobal" Type="Byte" />
+          <Property Name="iddelegacion" Type="Int32" />
+          <Property Name="iddsktuser" Type="Int32" />
+          <NavigationProperty Name="ASISTENTES" Relationship="Self.FK_ASISTENTES_EVENTOS" FromRole="EVENTOS" ToRole="ASISTENTES" />
+          <NavigationProperty Name="CCAA" Relationship="Self.FK_EVENTOS_CCAA" FromRole="EVENTOS" ToRole="CCAA" />
+          <NavigationProperty Name="DELEGACIONES" Relationship="Self.FK_EVENTOS_DELEGACIONES" FromRole="EVENTOS" ToRole="DELEGACIONES" />
+          <NavigationProperty Name="DOCUMENTOS" Relationship="Self.FK_DOCUMENTOS_EVENTOS1" FromRole="EVENTOS" ToRole="DOCUMENTOS" />
+          <NavigationProperty Name="DSKTUSERS" Relationship="Self.FK_EVENTOS_DSKTUSERS" FromRole="EVENTOS" ToRole="DSKTUSERS" />
+          <NavigationProperty Name="PROVINCIAS" Relationship="Self.FK_EVENTOS_PROVINCIAS" FromRole="EVENTOS" ToRole="PROVINCIAS" />
+        </EntityType>
+        <EntityType Name="IDIOMAS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="String" MaxLength="2" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PROVINCIAS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Byte" Nullable="false" />
+          <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="idccaa" Type="Byte" />
+          <NavigationProperty Name="CCAA" Relationship="Self.FK_PROVINCIAS_CCAA" FromRole="PROVINCIAS" ToRole="CCAA" />
+          <NavigationProperty Name="DATOSINTERES" Relationship="Self.FK_DATOSINTERES_PROVINCIAS" FromRole="PROVINCIAS" ToRole="DATOSINTERES" />
+          <NavigationProperty Name="EVENTOS" Relationship="Self.FK_EVENTOS_PROVINCIAS" FromRole="PROVINCIAS" ToRole="EVENTOS" />
+        </EntityType>
+        <EntityType Name="USUARIOS">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="estado" Type="Byte" />
+          <Property Name="cidapp" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="idsocio" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="imei" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="fechaestado" Type="Int32" />
+          <Property Name="notaestado" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="iddelegacion" Type="Int32" />
+          <Property Name="iddsktuser" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ASISTENTES" Relationship="Self.FK_ASISTENTES_USUARIOS" FromRole="USUARIOS" ToRole="ASISTENTES" />
+          <NavigationProperty Name="DELEGACIONES" Relationship="Self.FK_USUARIOS_DELEGACIONES" FromRole="USUARIOS" ToRole="DELEGACIONES" />
+        </EntityType>
+        <Association Name="FK_ASISTENTES_EVENTOS">
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="1" />
+          <End Role="ASISTENTES" Type="Self.ASISTENTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EVENTOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ASISTENTES">
+              <PropertyRef Name="ideevento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ASISTENTES_USUARIOS">
+          <End Role="USUARIOS" Type="Self.USUARIOS" Multiplicity="1" />
+          <End Role="ASISTENTES" Type="Self.ASISTENTES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="ASISTENTES">
+              <PropertyRef Name="idusuario" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PROVINCIAS_CCAA">
+          <End Role="CCAA" Type="Self.CCAA" Multiplicity="0..1" />
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CCAA">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="PROVINCIAS">
+              <PropertyRef Name="idccaa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DATOSINTERES_PROVINCIAS">
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="0..1" />
+          <End Role="DATOSINTERES" Type="Self.DATOSINTERES" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVINCIAS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DATOSINTERES">
+              <PropertyRef Name="idprovincia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DSKTUSERS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="1" />
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DSKTUSERS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_USUARIOS_DELEGACIONES">
+          <End Role="DELEGACIONES" Type="Self.DELEGACIONES" Multiplicity="0..1" />
+          <End Role="USUARIOS" Type="Self.USUARIOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DELEGACIONES">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="USUARIOS">
+              <PropertyRef Name="iddelegacion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENTOS_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="DOCUMENTOS" Type="Self.DOCUMENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DOCUMENTOS">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOCUMENTOS_EVENTOS1">
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="0..1" />
+          <End Role="DOCUMENTOS" Type="Self.DOCUMENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EVENTOS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="DOCUMENTOS">
+              <PropertyRef Name="idevento" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_DSKTUSERS">
+          <End Role="DSKTUSERS" Type="Self.DSKTUSERS" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DSKTUSERS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="iddsktuser" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EVENTOS_PROVINCIAS">
+          <End Role="PROVINCIAS" Type="Self.PROVINCIAS" Multiplicity="0..1" />
+          <End Role="EVENTOS" Type="Self.EVENTOS" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVINCIAS">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="EVENTOS">
+              <PropertyRef Name="idprovincia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EEVAPPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ASISTENTES" EntityType="Self.ASISTENTES" />
+          <EntitySet Name="CCAA" EntityType="Self.CCAA" />
+          <EntitySet Name="DATOSINTERES" EntityType="Self.DATOSINTERES" />
+          <EntitySet Name="DELEGACIONES" EntityType="Self.DELEGACIONES" />
+          <EntitySet Name="DOCUMENTOS" EntityType="Self.DOCUMENTOS" />
+          <EntitySet Name="DSKTUSERS" EntityType="Self.DSKTUSERS" />
+          <EntitySet Name="EVENTOS" EntityType="Self.EVENTOS" />
+          <EntitySet Name="IDIOMAS" EntityType="Self.IDIOMAS" />
+          <EntitySet Name="PROVINCIAS" EntityType="Self.PROVINCIAS" />
+          <EntitySet Name="USUARIOS" EntityType="Self.USUARIOS" />
+          <AssociationSet Name="FK_ASISTENTES_EVENTOS" Association="Self.FK_ASISTENTES_EVENTOS">
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+            <End Role="ASISTENTES" EntitySet="ASISTENTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ASISTENTES_USUARIOS" Association="Self.FK_ASISTENTES_USUARIOS">
+            <End Role="USUARIOS" EntitySet="USUARIOS" />
+            <End Role="ASISTENTES" EntitySet="ASISTENTES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_CCAA" Association="Self.FK_DATOSINTERES_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_CCAA" Association="Self.FK_EVENTOS_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PROVINCIAS_CCAA" Association="Self.FK_PROVINCIAS_CCAA">
+            <End Role="CCAA" EntitySet="CCAA" />
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_DELEGACIONES" Association="Self.FK_DATOSINTERES_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_DSKTUSERS" Association="Self.FK_DATOSINTERES_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DATOSINTERES_PROVINCIAS" Association="Self.FK_DATOSINTERES_PROVINCIAS">
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+            <End Role="DATOSINTERES" EntitySet="DATOSINTERES" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DSKTUSERS_DELEGACIONES" Association="Self.FK_DSKTUSERS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_DELEGACIONES" Association="Self.FK_EVENTOS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_USUARIOS_DELEGACIONES" Association="Self.FK_USUARIOS_DELEGACIONES">
+            <End Role="DELEGACIONES" EntitySet="DELEGACIONES" />
+            <End Role="USUARIOS" EntitySet="USUARIOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENTOS_DSKTUSERS" Association="Self.FK_DOCUMENTOS_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="DOCUMENTOS" EntitySet="DOCUMENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOCUMENTOS_EVENTOS1" Association="Self.FK_DOCUMENTOS_EVENTOS1">
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+            <End Role="DOCUMENTOS" EntitySet="DOCUMENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_DSKTUSERS" Association="Self.FK_EVENTOS_DSKTUSERS">
+            <End Role="DSKTUSERS" EntitySet="DSKTUSERS" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EVENTOS_PROVINCIAS" Association="Self.FK_EVENTOS_PROVINCIAS">
+            <End Role="PROVINCIAS" EntitySet="PROVINCIAS" />
+            <End Role="EVENTOS" EntitySet="EVENTOS" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EEVAPPModelStoreContainer" CdmEntityContainer="EEVAPPEntities">
+          <EntitySetMapping Name="ASISTENTES">
+            <EntityTypeMapping TypeName="EEVAPPModel.ASISTENTES">
+              <MappingFragment StoreEntitySet="ASISTENTES">
+                <ScalarProperty Name="ideevento" ColumnName="ideevento" />
+                <ScalarProperty Name="idusuario" ColumnName="idusuario" />
+                <ScalarProperty Name="inscritosqtty" ColumnName="inscritosqtty" />
+                <ScalarProperty Name="asistentesqtty" ColumnName="asistentesqtty" />
+                <ScalarProperty Name="valoracion" ColumnName="valoracion" />
+                <ScalarProperty Name="comentarios" ColumnName="comentarios" />
+                <ScalarProperty Name="ctrlvaloracion" ColumnName="ctrlvaloracion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CCAA">
+            <EntityTypeMapping TypeName="EEVAPPModel.CCAA">
+              <MappingFragment StoreEntitySet="CCAA">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DATOSINTERES">
+            <EntityTypeMapping TypeName="EEVAPPModel.DATOSINTERES">
+              <MappingFragment StoreEntitySet="DATOSINTERES">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="cp" ColumnName="cp" />
+                <ScalarProperty Name="idprovincia" ColumnName="idprovincia" />
+                <ScalarProperty Name="idccaa" ColumnName="idccaa" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="contacto" ColumnName="contacto" />
+                <ScalarProperty Name="ctrlglobal" ColumnName="ctrlglobal" />
+                <ScalarProperty Name="iddelegacion" ColumnName="iddelegacion" />
+                <ScalarProperty Name="iddsktuser" ColumnName="iddsktuser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DELEGACIONES">
+            <EntityTypeMapping TypeName="EEVAPPModel.DELEGACIONES">
+              <MappingFragment StoreEntitySet="DELEGACIONES">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="direccion" ColumnName="direccion" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="cp" ColumnName="cp" />
+                <ScalarProperty Name="idprovincia" ColumnName="idprovincia" />
+                <ScalarProperty Name="idccaa" ColumnName="idccaa" />
+                <ScalarProperty Name="telefono" ColumnName="telefono" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="contacto" ColumnName="contacto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DOCUMENTOS">
+            <EntityTypeMapping TypeName="EEVAPPModel.DOCUMENTOS">
+              <MappingFragment StoreEntitySet="DOCUMENTOS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="ciddocumento" ColumnName="ciddocumento" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="idevento" ColumnName="idevento" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="iddsktuser" ColumnName="iddsktuser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DSKTUSERS">
+            <EntityTypeMapping TypeName="EEVAPPModel.DSKTUSERS">
+              <MappingFragment StoreEntitySet="DSKTUSERS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="nickname" ColumnName="nickname" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="idprovincia" ColumnName="idprovincia" />
+                <ScalarProperty Name="idccaa" ColumnName="idccaa" />
+                <ScalarProperty Name="iddelegacion" ColumnName="iddelegacion" />
+                <ScalarProperty Name="ctrlmaster" ColumnName="ctrlmaster" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EVENTOS">
+            <EntityTypeMapping TypeName="EEVAPPModel.EVENTOS">
+              <MappingFragment StoreEntitySet="EVENTOS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="cidevento" ColumnName="cidevento" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="titulo" ColumnName="titulo" />
+                <ScalarProperty Name="intro" ColumnName="intro" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+                <ScalarProperty Name="fechainicio" ColumnName="fechainicio" />
+                <ScalarProperty Name="horainicio" ColumnName="horainicio" />
+                <ScalarProperty Name="fechafin" ColumnName="fechafin" />
+                <ScalarProperty Name="horafin" ColumnName="horafin" />
+                <ScalarProperty Name="imagen" ColumnName="imagen" />
+                <ScalarProperty Name="notasevento" ColumnName="notasevento" />
+                <ScalarProperty Name="notastransporte" ColumnName="notastransporte" />
+                <ScalarProperty Name="idccaa" ColumnName="idccaa" />
+                <ScalarProperty Name="idprovincia" ColumnName="idprovincia" />
+                <ScalarProperty Name="ciudad" ColumnName="ciudad" />
+                <ScalarProperty Name="coordgps" ColumnName="coordgps" />
+                <ScalarProperty Name="ctrlglobal" ColumnName="ctrlglobal" />
+                <ScalarProperty Name="iddelegacion" ColumnName="iddelegacion" />
+                <ScalarProperty Name="iddsktuser" ColumnName="iddsktuser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IDIOMAS">
+            <EntityTypeMapping TypeName="EEVAPPModel.IDIOMAS">
+              <MappingFragment StoreEntitySet="IDIOMAS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROVINCIAS">
+            <EntityTypeMapping TypeName="EEVAPPModel.PROVINCIAS">
+              <MappingFragment StoreEntitySet="PROVINCIAS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="idccaa" ColumnName="idccaa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USUARIOS">
+            <EntityTypeMapping TypeName="EEVAPPModel.USUARIOS">
+              <MappingFragment StoreEntitySet="USUARIOS">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="cidapp" ColumnName="cidapp" />
+                <ScalarProperty Name="idsocio" ColumnName="idsocio" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="imei" ColumnName="imei" />
+                <ScalarProperty Name="fechaestado" ColumnName="fechaestado" />
+                <ScalarProperty Name="notaestado" ColumnName="notaestado" />
+                <ScalarProperty Name="iddelegacion" ColumnName="iddelegacion" />
+                <ScalarProperty Name="iddsktuser" ColumnName="iddsktuser" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
