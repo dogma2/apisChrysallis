@@ -9,10 +9,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using API_Project;
+using System.Net.Mail;
 
 /*
 { "id_tema":, "descripcion":"" }
-GET: http://localhost:64985/api/APPCTIVE/2
+GET: http://localhost:64985/api/APPCTIVE/mgoncevatt.cep@gmail.com
+GET: http://api.eevapp.es/api/APPCTIVE/1
+GET: http://localhost:64985/api/APPCTIVE/1
 POST: http://localhost:64985/api/APPCTIVE/ {"descripcion":"Alternativo"}
 PUT: http://localhost:64985/api/APPCTIVE/1029 {"id_tema":1029, "descripcion":"Alternativo more"}
 DEL http://localhost:64985/api/APPCTIVE/1029
@@ -24,17 +27,22 @@ namespace API_Project.Controllers
     {
         private EEVAPPEntities db = new EEVAPPEntities();
 
-        // GET: api/APPCTIVE/5
+        // GET: api/APPCTIVE/mgoncevatt.cep@gmail.com
         [ResponseType(typeof(USUARIOS))]
-        public IHttpActionResult GetUSUARIOS(String email)
+        public IHttpActionResult GetUSUARIOS(String _email)
         {
-            USUARIOS uSUARIOS = db.USUARIOS.Find(email);
-            if (uSUARIOS == null)
-            {
-                return NotFound();
-            }
+            Console.WriteLine("_email: " + _email);
+            List<USUARIOS> _entidades = (from e in db.USUARIOS
+                                         where e.email.Equals(_email)
+                                         select e
+                                            ).ToList();
 
-            return Ok(uSUARIOS);
+            if (_entidades.Count==0) { return Ok(_email); }
+            else
+            {
+                if (_entidades[0].estado!=0) { emailActivationAppCode(_entidades[0].email, _entidades[0].idsocio); }
+                return Ok(_entidades[0]);
+            }
         }
 
         // PUT: api/APPCTIVE/5
@@ -120,10 +128,7 @@ namespace API_Project.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-                db.Dispose();
-            }
+            if (disposing) { db.Dispose(); }
             base.Dispose(disposing);
         }
 
@@ -267,5 +272,32 @@ namespace API_Project.Controllers
 
 
 
+
+
+
+        //     Do not forget the using System.Net.Mail;
+        private void emailActivationAppCode(string emailtarget, string nametarget)
+        {
+            MailAddress from = new MailAddress("eevapp@eevapp.com", "Chrysallis.org");
+            MailAddress to = new MailAddress(emailtarget, nametarget);
+            String subject = "Código de activacion Aplicación Chrysallis";
+            String body = "Para activar la aplicación debes introducir el siguiente código:\n" + "03091969" + "\n";
+            SendEmail( subject, body, from, to);
+        }
+
+        protected void SendEmail(string _subject, string _body, MailAddress _from, MailAddress _to)
+        {
+            string Text = "";
+            SmtpClient mailClient = new SmtpClient("Mailhost");
+            MailMessage msgMail;
+            msgMail = new MailMessage();
+            msgMail.From = _from;
+            msgMail.To.Add(_to);
+            msgMail.Subject = _subject;
+            msgMail.Body = _body;
+            msgMail.IsBodyHtml = true;
+            mailClient.Send(msgMail);
+            msgMail.Dispose();
+        }
     }
 }
