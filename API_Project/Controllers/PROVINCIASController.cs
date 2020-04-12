@@ -12,44 +12,44 @@ using API_Project;
 
 namespace API_Project.Controllers
 {
-    public class APPSSISTANTSController : ApiController
+    public class PROVINCIASController : ApiController
     {
         private EEvAppEntities db = new EEvAppEntities();
 
-        // GET: api/APPSSISTANTS
-        public IQueryable<ASISTENTES> GetASISTENTES()
+        // GET: api/PROVINCIAS
+        public IQueryable<PROVINCIAS> GetPROVINCIAS()
         {
-            return db.ASISTENTES;
+            return db.PROVINCIAS;
         }
 
-        // GET: api/APPSSISTANTS/5
-        [ResponseType(typeof(ASISTENTES))]
-        public IHttpActionResult GetASISTENTES(int id)
+        // GET: api/PROVINCIAS/5
+        [ResponseType(typeof(PROVINCIAS))]
+        public IHttpActionResult GetPROVINCIAS(byte id)
         {
-            ASISTENTES aSISTENTES = db.ASISTENTES.Find(id);
-            if (aSISTENTES == null)
+            PROVINCIAS pROVINCIAS = db.PROVINCIAS.Find(id);
+            if (pROVINCIAS == null)
             {
                 return NotFound();
             }
 
-            return Ok(aSISTENTES);
+            return Ok(pROVINCIAS);
         }
 
-        // PUT: api/APPSSISTANTS/5
+        // PUT: api/PROVINCIAS/5
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutASISTENTES(int id, ASISTENTES aSISTENTES)
+        public IHttpActionResult PutPROVINCIAS(byte id, PROVINCIAS pROVINCIAS)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != aSISTENTES.ideevento)
+            if (id != pROVINCIAS.id)
             {
                 return BadRequest();
             }
 
-            db.Entry(aSISTENTES).State = EntityState.Modified;
+            db.Entry(pROVINCIAS).State = EntityState.Modified;
 
             try
             {
@@ -57,7 +57,7 @@ namespace API_Project.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ASISTENTESExists(id))
+                if (!PROVINCIASExists(id))
                 {
                     return NotFound();
                 }
@@ -70,16 +70,16 @@ namespace API_Project.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/APPSSISTANTS
-        [ResponseType(typeof(ASISTENTES))]
-        public IHttpActionResult PostASISTENTES(ASISTENTES aSISTENTES)
+        // POST: api/PROVINCIAS
+        [ResponseType(typeof(PROVINCIAS))]
+        public IHttpActionResult PostPROVINCIAS(PROVINCIAS pROVINCIAS)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.ASISTENTES.Add(aSISTENTES);
+            db.PROVINCIAS.Add(pROVINCIAS);
 
             try
             {
@@ -87,7 +87,7 @@ namespace API_Project.Controllers
             }
             catch (DbUpdateException)
             {
-                if (ASISTENTESExists(aSISTENTES.ideevento))
+                if (PROVINCIASExists(pROVINCIAS.id))
                 {
                     return Conflict();
                 }
@@ -97,23 +97,23 @@ namespace API_Project.Controllers
                 }
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = aSISTENTES.ideevento }, aSISTENTES);
+            return CreatedAtRoute("DefaultApi", new { id = pROVINCIAS.id }, pROVINCIAS);
         }
 
-        // DELETE: api/APPSSISTANTS/5
-        [ResponseType(typeof(ASISTENTES))]
-        public IHttpActionResult DeleteASISTENTES(int id)
+        // DELETE: api/PROVINCIAS/5
+        [ResponseType(typeof(PROVINCIAS))]
+        public IHttpActionResult DeletePROVINCIAS(byte id)
         {
-            ASISTENTES aSISTENTES = db.ASISTENTES.Find(id);
-            if (aSISTENTES == null)
+            PROVINCIAS pROVINCIAS = db.PROVINCIAS.Find(id);
+            if (pROVINCIAS == null)
             {
                 return NotFound();
             }
 
-            db.ASISTENTES.Remove(aSISTENTES);
+            db.PROVINCIAS.Remove(pROVINCIAS);
             db.SaveChanges();
 
-            return Ok(aSISTENTES);
+            return Ok(pROVINCIAS);
         }
 
         protected override void Dispose(bool disposing)
@@ -125,9 +125,9 @@ namespace API_Project.Controllers
             base.Dispose(disposing);
         }
 
-        private bool ASISTENTESExists(int id)
+        private bool PROVINCIASExists(byte id)
         {
-            return db.ASISTENTES.Count(e => e.ideevento == id) > 0;
+            return db.PROVINCIAS.Count(e => e.id == id) > 0;
         }
     }
 }

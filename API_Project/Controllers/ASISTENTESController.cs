@@ -12,17 +12,17 @@ using API_Project;
 
 namespace API_Project.Controllers
 {
-    public class APPSSISTANTSController : ApiController
+    public class ASISTENTESController : ApiController
     {
         private EEvAppEntities db = new EEvAppEntities();
 
-        // GET: api/APPSSISTANTS
+        // GET: api/ASISTENTES
         public IQueryable<ASISTENTES> GetASISTENTES()
         {
             return db.ASISTENTES;
         }
 
-        // GET: api/APPSSISTANTS/5
+        // GET: api/ASISTENTES/5
         [ResponseType(typeof(ASISTENTES))]
         public IHttpActionResult GetASISTENTES(int id)
         {
@@ -35,7 +35,7 @@ namespace API_Project.Controllers
             return Ok(aSISTENTES);
         }
 
-        // PUT: api/APPSSISTANTS/5
+        // PUT: api/ASISTENTES/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutASISTENTES(int id, ASISTENTES aSISTENTES)
         {
@@ -70,7 +70,7 @@ namespace API_Project.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/APPSSISTANTS
+        // POST: api/ASISTENTES
         [ResponseType(typeof(ASISTENTES))]
         public IHttpActionResult PostASISTENTES(ASISTENTES aSISTENTES)
         {
@@ -100,7 +100,7 @@ namespace API_Project.Controllers
             return CreatedAtRoute("DefaultApi", new { id = aSISTENTES.ideevento }, aSISTENTES);
         }
 
-        // DELETE: api/APPSSISTANTS/5
+        // DELETE: api/ASISTENTES/5
         [ResponseType(typeof(ASISTENTES))]
         public IHttpActionResult DeleteASISTENTES(int id)
         {

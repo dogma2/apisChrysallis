@@ -20,6 +20,7 @@ namespace API_Project
             this.DATOSINTERES = new HashSet<DATOSINTERES>();
             this.DOCUMENTOS = new HashSet<DOCUMENTOS>();
             this.EVENTOS = new HashSet<EVENTOS>();
+            this.USUARIOS = new HashSet<USUARIOS>();
         }
     
         public int id { get; set; }
@@ -40,5 +41,7 @@ namespace API_Project
         public virtual ICollection<DOCUMENTOS> DOCUMENTOS { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EVENTOS> EVENTOS { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<USUARIOS> USUARIOS { get; set; }
     }
 }

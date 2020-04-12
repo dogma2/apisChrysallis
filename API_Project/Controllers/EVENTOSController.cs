@@ -12,17 +12,17 @@ using API_Project;
 
 namespace API_Project.Controllers
 {
-    public class APPDATEController : ApiController
+    public class EVENTOSController : ApiController
     {
         private EEvAppEntities db = new EEvAppEntities();
 
-        // GET: api/APPDATE
+        // GET: api/EVENTOS
         public IQueryable<EVENTOS> GetEVENTOS()
         {
             return db.EVENTOS;
         }
 
-        // GET: api/APPDATE/5
+        // GET: api/EVENTOS/5
         [ResponseType(typeof(EVENTOS))]
         public IHttpActionResult GetEVENTOS(int id)
         {
@@ -35,55 +35,7 @@ namespace API_Project.Controllers
             return Ok(eVENTOS);
         }
 
-
-        /* RETURN FILE
-
-        public HttpResponseMessage GetFile(string id)
-        {
-            if (String.IsNullOrEmpty(id))
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-
-            string fileName;
-            string localFilePath;
-            int fileSize;
-
-            localFilePath = getFileFromID(id, out fileName, out fileSize);
-
-            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-            response.Content = new StreamContent(new FileStream(localFilePath, FileMode.Open, FileAccess.Read));
-            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-            response.Content.Headers.ContentDisposition.FileName = fileName;
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
-
-            return response;
-        }
-        */
-
-
-        /* RETURN IMAGE
-
-        public HttpResponseMessage Get(string imageName, int width, int height)
-        {
-            Image img = GetImage(imageName, width, height);
-            using (MemoryStream ms = new MemoryStream())
-            {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-
-                HttpResponseMessage result = new HttpResponseMessage(HttpStatusCode.OK);
-                result.Content = new ByteArrayContent(ms.ToArray());
-                result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/png");
-
-                return result;
-            }
-        }
-
-    */
-
-
-
-
-
-        // PUT: api/APPDATE/5
+        // PUT: api/EVENTOS/5
         [ResponseType(typeof(void))]
         public IHttpActionResult PutEVENTOS(int id, EVENTOS eVENTOS)
         {
@@ -118,7 +70,7 @@ namespace API_Project.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // POST: api/APPDATE
+        // POST: api/EVENTOS
         [ResponseType(typeof(EVENTOS))]
         public IHttpActionResult PostEVENTOS(EVENTOS eVENTOS)
         {
@@ -133,7 +85,7 @@ namespace API_Project.Controllers
             return CreatedAtRoute("DefaultApi", new { id = eVENTOS.id }, eVENTOS);
         }
 
-        // DELETE: api/APPDATE/5
+        // DELETE: api/EVENTOS/5
         [ResponseType(typeof(EVENTOS))]
         public IHttpActionResult DeleteEVENTOS(int id)
         {

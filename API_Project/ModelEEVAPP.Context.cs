@@ -13,10 +13,10 @@ namespace API_Project
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class EEVAPPEntities : DbContext
+    public partial class EEvAppEntities : DbContext
     {
-        public EEVAPPEntities()
-            : base("name=EEVAPPEntities")
+        public EEvAppEntities()
+            : base("name=EEvAppEntities")
         {
         }
     
