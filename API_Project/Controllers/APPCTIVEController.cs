@@ -3,162 +3,172 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Mail;
 using System.Web.Http;
-using System.Web.Http.Description;
-using API_Project;
-
-/*
-  
-GET: http://api.eevapp.es/api/APPCTIVE/1
-GET: http://api.eevapp.es/api/api/APPCTIVE/1
-GET: http://localhost:64985/api/APPCTIVE/mgoncevatt.cep@gmail.com
-GET: http://localhost:64985/api/APPCTIVE/1
-POST: http://localhost:64985/api/APPCTIVE/ {"descripcion":"Alternativo"}
-PUT: http://localhost:64985/api/APPCTIVE/1029 {"id_tema":1029, "descripcion":"Alternativo more"}
-DEL http://localhost:64985/api/APPCTIVE/1029
-
-         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GET: api/ACTORES/5
-        [HttpGet]   // define a que solicitud responde, otra opcion es anteponer "Get/Post/Put/Delete/etc" al nombre del metodo
-        [Route("api/ACTORES/nombre/{nombre}")] // define la ruta y parametros de llamada API
-        public IHttpActionResult ActoresByNombre(string nombre)
-        {
-            IHttpActionResult retu;
-            db.Configuration.LazyLoadingEnabled = false; // no retorna entidades asociadas por PK
-            List<ACTORES> _actores = (from a in db.ACTORES
-                                  where a.nombre.Contains(nombre)
-                                  select a).ToList();
-            if (_actores == null) { retu = NotFound(); } else { retu = Ok(_actores); }
-            return retu;
-        }
-     
-     */
+using OC.Core.Crypto;
 
 namespace API_Project.Controllers
 {
     public class APPCTIVEController : ApiController
     {
         private EEvAppEntities db = new EEvAppEntities();
-
-/*
-        // GET: api/CCAA/5
-        [ResponseType(typeof(USUARIOS))]
-        public IHttpActionResult GetCCAA(int id)
-        {
-            USUARIOS usuario = db.USUARIOS.Find(id);
-            if (usuario == null) { return NotFound(); }
-            return Ok(usuario);
-        }
-*/
-
-
-
-                [ResponseType(typeof(USUARIOS))]
-                public IHttpActionResult GetUSUARIOS(int id)
+        /*
+                public string GetAPPCTIVE()
                 {
-                    //            if (_email != null) { List<USUARIOS> _entidades = (from e in db.USUARIOS where e.email.Equals(_email) select e ).ToList();
+                    string retu = "";
+                    // - - - - TEST de grabacion de log
+                    string filename = "TEST";
+                    retu += RegisterActionInLog("PRUEBA", filename);
+                    retu += ReadingActionInLog(filename);
 
-                    USUARIOS uSUARIOS = db.USUARIOS.Find(id);
-                    if (uSUARIOS == null) { return NotFound(); }
-                    else
+                    return retu;
+                }
+        */
+
+        //[HttpGet]   // define a que solicitud responde, otra opcion es anteponer "Get/Post/Put/Delete/etc" al nombre del metodo
+        //[Route("api/APPCTIVE/active/{email_imei}")] // define la ruta y parametros de llamada API
+        //[ResponseType(string)]
+        public string GetAPPCTIVE()
+        {
+            string email_imei = "grupo@dogma2.es|123456789012345";
+            List<USUARIOS> _entidades = new List<USUARIOS>();
+
+            bool isOK = true;
+            RegisterActionInLog("GetAPPCTIVE", email_imei);
+
+            string actionResult = "";
+
+            // - - - - - getting data
+            string _email = "";
+            string _imei = "";
+            if (email_imei != null) {
+                string[] _data = email_imei.Split('|');
+                if (_data.Count() > 1) {
+                    _email = _data[0];
+                    _imei = _data[1];
+                }
+            } else { isOK = false; actionResult += " | email_imei = null"; }
+
+            // - - - - - control parametro
+            if (isOK && _email != null)
+            {
+                _entidades = (from e in db.USUARIOS where e.email.Equals(_email) select e).ToList();
+
+                // - - - - - control usuario existente
+                if (_entidades[0] != null)
+                {
+
+                    // - - - - - control usuario activo
+                    if (_entidades[0].estado != 0)
                     {
-                        if (uSUARIOS.estado != 0) { emailActivationAppCode(uSUARIOS.email, uSUARIOS.idsocio); }
-                    }
+                        // - - - - - datos agrabar por activacion en socio
+                        _entidades[0].imei = _imei;
+                        _entidades[0].cidapp = getHashString(_imei);
+                        _entidades[0].fechaestado = (long)DateTime.Now.Ticks;
+                        _entidades[0].notaestado = "Activacion de app";
 
-                    //if (_entidades.Count > 0) 
-                    //    {
-                    //        if (_entidades[0].estado != 0) { emailActivationAppCode(_entidades[0].email, _entidades[0].idsocio); }
-                    //    }
-                    //            }
-                                return StatusCode(HttpStatusCode.NoContent); 
+                        // - - - - - envía email
+                        isOK = emailActivationAppCode(_entidades[0].email, _entidades[0].idsocio, _entidades[0].cidapp);
+
+                        if (isOK)
+                        {
+                            // - - - - - graba activacion en socio
+                            db.Entry(_entidades[0]).State = EntityState.Modified;
+                            try { db.SaveChanges(); }
+                            catch (DbUpdateConcurrencyException) { if (!USUARIOSExists(_entidades[0].id)) { isOK = false; actionResult += " | not USUARIOSExists"; } else { throw; } }
+                        }
+                        else { isOK = false; actionResult += " | emailing error"; }
+
+                    } else { isOK = false; actionResult += " | _entidades[0].estado = 0"; }
+
+                } else { isOK = false; actionResult += " | _entidades[0] = null"; }
+
+            } else { isOK = false; actionResult += " | isOK = false o _email = null"; }
+
+            RegisterActionInLog("GetAPPCTIVE", actionResult);
+
+            if (isOK) { return _entidades[0].email; }
+            else { return "Error: " + actionResult;  }
+
+        }
 
 
-                }
 
-
-        // PUT: api/APPCTIVE/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutUSUARIOS(int id, USUARIOS uSUARIOS)
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - WORK LOG ->
+        // - - - - - writting log
+        public string RegisterActionInLog(string whoami, string whatsapp)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != uSUARIOS.id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(uSUARIOS).State = EntityState.Modified;
-
+            string retu = "";
+            string filepath = "C:\\inetpub\\vhosts\\eevapp.es\\httpdocs\\logs\\";
             try
             {
-                db.SaveChanges();
+                StreamWriter logfile = File.AppendText(filepath + whoami + ".log");
+                WriteLog(whatsapp, logfile);
+                logfile.Close();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!USUARIOSExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            catch(Exception e) { retu += e.ToString(); }
+            return retu;
         }
-
-        // POST: api/APPCTIVE
-        [ResponseType(typeof(USUARIOS))]
-        public IHttpActionResult PostUSUARIOS(USUARIOS uSUARIOS)
+        // - - - - - making content
+        public void WriteLog(string logMessage, TextWriter w)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.USUARIOS.Add(uSUARIOS);
-
+            DateTime times = DateTime.Now;
+            w.Write("- " + times.Year+"."+times.Month + "." +times.Day + "_" + times.Hour+":"+times.Minute+" -> "+logMessage + '\r' + '\n');
+        }
+        // - - - - - reading log
+        public string ReadingActionInLog(string whoami)
+        {
+            string retu = "";
+            string filepath = "C:\\inetpub\\vhosts\\eevapp.es\\httpdocs\\logs\\";
             try
             {
-                db.SaveChanges();
+                StreamReader r = File.OpenText(filepath + whoami + ".log");
+                retu = DumpLog(r);
+                r.Close();
             }
-            catch (DbUpdateException)
-            {
-                if (USUARIOSExists(uSUARIOS.id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtRoute("DefaultApi", new { id = uSUARIOS.id }, uSUARIOS);
+            catch (Exception e) { retu += e.ToString(); }
+            return whoami+": "+retu;
         }
-
-        // DELETE: api/APPCTIVE/5
-        [ResponseType(typeof(USUARIOS))]
-        public IHttpActionResult DeleteUSUARIOS(int id)
+        // - - - - - taking content
+        public string DumpLog(StreamReader r)
         {
-            USUARIOS uSUARIOS = db.USUARIOS.Find(id);
-            if (uSUARIOS == null)
-            {
-                return NotFound();
-            }
-
-            db.USUARIOS.Remove(uSUARIOS);
-            db.SaveChanges();
-
-            return Ok(uSUARIOS);
+            string line;
+            string content = "";
+            while ((line = r.ReadLine()) != null) { content += line + '\r' + '\n'; }
+            return content;
         }
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - WORK LOG //
+
+
+
+
+        /* RETURN FILE
+
+        public HttpResponseMessage GetFile(string id)
+        {
+            if (String.IsNullOrEmpty(id))
+                return Request.CreateResponse(HttpStatusCode.BadRequest);
+
+            string fileName;
+            string localFilePath;
+            int fileSize;
+
+            localFilePath = getFileFromID(id, out fileName, out fileSize);
+
+            HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+            response.Content = new StreamContent(new FileStream(localFilePath, FileMode.Open, FileAccess.Read));
+            response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+            response.Content.Headers.ContentDisposition.FileName = fileName;
+            response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
+
+            return response;
+        }
+        */
+
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
         protected override void Dispose(bool disposing)
         {
@@ -175,170 +185,51 @@ namespace API_Project.Controllers
 
 
 
-        /*
 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GET: api/TEMAS/5
-        [HttpGet]   // define a que solicitud responde, otra opcion es anteponer "Get/Post/Put/Delete/etc" al nombre del metodo
-        [Route("api/TEMAS/descripcion/{descripcion}")] // define la ruta y parametros de llamada API
-        public IHttpActionResult TemasByDescripcion(string descripcion)
+
+
+
+
+        // - - - - - retorna la clave en hash512
+        public static String getHashString(String pass)
         {
-            IHttpActionResult retu;
-            db.Configuration.LazyLoadingEnabled = false; // no retorna entidades asociadas por PK
-            List<TEMAS> _temas = (from t in db.TEMAS
-                                  where t.descripcion.Contains(descripcion)
-                                  select t).ToList();
-            if (_temas == null) { retu = NotFound(); } else { retu = Ok(_temas); }
-            return retu;
+            Hash encrypt = new Hash();
+            return (String)encrypt.Sha512(pass);
         }
 
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GET: api/TEMAS
-        public IQueryable<TEMAS> GetTEMAS()
+        protected bool emailActivationAppCode(string emailtarget, string nametarget, string imeicode)
         {
-            db.Configuration.LazyLoadingEnabled = false; // no retorna entidades asociadas por PK
-            return db.TEMAS;
-        }
+            bool isOK = true;
+            Random random = new Random();
+            int ops = random.Next(0, 120);
+            string thecode = imeicode.Substring(ops, 6);
 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GET: api/TEMAS/5
-        [ResponseType(typeof(TEMAS))]
-        public IHttpActionResult GetTEMAS(int id)
-        {
-            //TEMAS tEMAS = db.TEMAS.Find(id);  // busca por PK
-            //if (tEMAS == null) { return NotFound(); }
-            //return Ok(tEMAS);
-            IHttpActionResult retu;
-            db.Configuration.LazyLoadingEnabled = false; // no retorna entidades asociadas por PK
-            TEMAS _tema = (from t in db.TEMAS.Include("PELICULAS")
-                           where t.id_tema == id
-                           select t).FirstOrDefault();
-            if (_tema == null) { retu = NotFound(); } else { retu = Ok(_tema); }
-            return retu;
-        }
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PUT: api/TEMAS/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutTEMAS(int id, TEMAS tEMAS)
-        {
-            IHttpActionResult retu = StatusCode(HttpStatusCode.NoContent);
-            if (!ModelState.IsValid) { retu = BadRequest(ModelState); }
-            else if (id != tEMAS.id_tema) { retu = BadRequest(); }
-            else
-            {
-                db.Entry(tEMAS).State = EntityState.Modified;
-                try { db.SaveChanges(); }
-                catch (DbUpdateConcurrencyException ex)
-                {
-                    if (!TEMASExists(id)) { retu = NotFound(); }
-                    else
-                    {
-                        SqlException sqlEx = (SqlException)ex.InnerException.InnerException;
-                        retu = BadRequest(Utilidad.MensajeError(sqlEx));
-                    }
-                }
-                catch (DbUpdateException ex)
-                {
-                    SqlException sqlEx = (SqlException)ex.InnerException.InnerException;
-                    retu = BadRequest(Utilidad.MensajeError(sqlEx));
-                }
-            }
-            return retu;
-        }
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - POST: api/TEMAS
-        [ResponseType(typeof(TEMAS))]
-        public IHttpActionResult PostTEMAS(TEMAS tEMAS)
-        {
-            IHttpActionResult retu = CreatedAtRoute("DefaultApi", new { id = tEMAS.id_tema }, tEMAS);
-            if (!ModelState.IsValid) { retu = BadRequest(ModelState); }
-            else
-            {
-                db.TEMAS.Add(tEMAS);
-                try { db.SaveChanges(); }
-                catch (DbUpdateException ex)
-                {
-                    SqlException sqlEx = (SqlException)ex.InnerException.InnerException;
-                    retu = BadRequest(Utilidad.MensajeError(sqlEx));
-                }
-            }
-            return retu;
-        }
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DELETE: api/TEMAS/5
-        [ResponseType(typeof(TEMAS))]
-        public IHttpActionResult DeleteTEMAS(int id)
-        {
-            IHttpActionResult retu;
-            TEMAS tEMAS = db.TEMAS.Find(id);
-            if (tEMAS == null) { retu = NotFound(); }
-            else
-            {
-                retu = Ok(tEMAS);
-                db.TEMAS.Remove(tEMAS);
-                try { db.SaveChanges(); }
-                catch (DbUpdateException ex)
-                {
-                    SqlException sqlEx = (SqlException)ex.InnerException.InnerException;
-                    retu = BadRequest(Utilidad.MensajeError(sqlEx));
-                }
-            }
-            return retu;
-        }
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing) { db.Dispose(); }
-            base.Dispose(disposing);
-        }
-
-        private bool TEMASExists(int id)
-        {
-            return db.TEMAS.Count(e => e.id_tema == id) > 0;
-        }
-
-    */
-
-
-
-
-
-
-
-
-
-
-        //     Do not forget the using System.Net.Mail;
-        private void emailActivationAppCode(string emailtarget, string nametarget)
-        {
-            MailAddress from = new MailAddress("eevapp@eevapp.com", "Chrysallis.org");
-            MailAddress to = new MailAddress(emailtarget, nametarget);
-            String subject = "Código de activacion Aplicación Chrysallis";
-            String body = "Para activar la aplicación debes introducir el siguiente código:\n" + "03091969" + "\n";
-            SendEmail( subject, body, from, to);
-        }
-
-        protected void SendEmail(string _subject, string _body, MailAddress _from, MailAddress _to)
-        {
             try
             {
-                // servidor
-                SmtpClient clienteSMTP = new SmtpClient("eevapp.es", 465);
-                clienteSMTP.UseDefaultCredentials = true;
-                clienteSMTP.EnableSsl = true;
-                // mensaje
+                // - - - - - servidor
+                SmtpClient clienteSMTP = new SmtpClient();
+                clienteSMTP.UseDefaultCredentials = false;
+                clienteSMTP.Host = "81.169.196.120";
+                clienteSMTP.Port = 25;
+                clienteSMTP.Credentials = new System.Net.NetworkCredential("chrysallis@eevapp.es", "CeP$2020D!M2T");
+                // - - - - - mensaje
                 MailMessage mensaje = new MailMessage();
-                mensaje.From = _from;
-                mensaje.To.Add(_to);
-                mensaje.Subject = _subject;
-                mensaje.Body = _body;
+                mensaje.From = new MailAddress("chrysallis@eevapp.es", "Chrysallis.org");
+                // email chrysallis@eevapp.es | CeP$2020D!M2T
+                mensaje.To.Add( new MailAddress(emailtarget, nametarget) );
+                mensaje.Subject = "Código de activacion Aplicación Chrysallis";
+                mensaje.Body = "Para activar la aplicación debes introducir el siguiente código:"+'\n' + thecode + '\n';
                 mensaje.IsBodyHtml = true;
-                // send
+                // - - - - - send
                 clienteSMTP.Send(mensaje);
                 mensaje.Dispose();
             }
-            catch (Exception ep) { Console.WriteLine("failed to send email with the following error:"); Console.WriteLine(ep.Message); }
+            catch (Exception ep)
+            {
+                isOK = false;
+                RegisterActionInLog("GetAPPCTIVE", "failed to send email with the following error:" + ep.ToString() );
+            }
+            return isOK;
         }
     }
 }
