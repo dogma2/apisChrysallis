@@ -175,6 +175,8 @@
     <Compile Include="CCAA.cs">
       <DependentUpon>ModelEEVAPP.tt</DependentUpon>
     </Compile>
+    <Compile Include="Classes\AsociationDataes.cs" />
+    <Compile Include="Classes\DeviceAppDataes.cs" />
     <Compile Include="Controllers\APPCTIVEController.cs" />
     <Compile Include="Controllers\APPDATEController.cs" />
     <Compile Include="Controllers\APPSSISTANTSController.cs" />
@@ -184,8 +186,11 @@
     <Compile Include="Controllers\DELEGACIONESController.cs" />
     <Compile Include="Controllers\DOCUMENTOSController.cs" />
     <Compile Include="Controllers\EVENTOSController.cs" />
+    <Compile Include="Controllers\final.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PROVINCIASController.cs" />
+    <Compile Include="Controllers\UPCONFIGController.cs" />
+    <Compile Include="Controllers\UPDATASController.cs" />
     <Compile Include="Controllers\USUARIOSController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="DATOSINTERES.cs">
