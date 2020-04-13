@@ -18,13 +18,13 @@ namespace API_Project
             config.Formatters.Remove(config.Formatters.XmlFormatter);
             // - - - - - - - - - - - - - - - - - - - - -
             var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            // json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All; // Evitar referencia circular
-            // json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects; // Evitar referencia circular para c/objeto
-//            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; // otra opcion de estructura de datos referenciados en json
-//            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None; // otra opcion de estructura de datos referenciados en json
 
-            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
-            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects;
+            //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All; // Evitar referencia circular
+            //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects; // Evitar referencia circular para c/objeto
+            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None; // Evitar referencia circular
+
+            config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; // otra opcion de estructura de datos referenciados en json
+            config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None; // otra opcion de estructura de datos referenciados en json
 
             // - - - - - - - - - - - - - - - - - - - - -
             // - - - - - - - - - - - - - - - - - - - - -

@@ -187,7 +187,7 @@ RegisterActionInLog("GetAPPCTIVE", "167 - " + actionResult);
                 {
                     System.IO.DirectoryInfo dirinfo;
                     // elimina archivos contenidos para generar nuevos
-                    dirinfo = new System.IO.DirectoryInfo(dirMaster);
+                    dirinfo = new System.IO.DirectoryInfo(activatePath);
                     foreach (System.IO.FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
 
 
@@ -254,7 +254,7 @@ RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
                     // - - - - - directory "EEvaApp/Xtras"
                     List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
                     // - - - - - graba json en carpeta                
-                    var json_data02 = JToken.FromObject(_dele);
+                    var json_data02 = JToken.FromObject(_dele, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                     fichero = File.CreateText(dirXtras + "Delegaciones" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data02.WriteTo(jsonwriter);
@@ -277,7 +277,7 @@ RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
                 {
                     List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
                     // - - - - - graba json en carpeta                
-                    var json_data04 = JToken.FromObject(_ccaa);
+                    var json_data04 = JToken.FromObject(_ccaa, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                     fichero = File.CreateText(dirXtras + "Comunidades" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data04.WriteTo(jsonwriter);
@@ -288,7 +288,8 @@ RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
                 try
                 {
                     List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
-                    var json_data05 = JToken.FromObject(_prov);
+                    // - - - - - graba json en carpeta         
+                    var json_data05 = JToken.FromObject(_prov, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
                     fichero = File.CreateText(dirXtras + "Provincias" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data05.WriteTo(jsonwriter);
@@ -314,7 +315,7 @@ RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
             RegisterActionInLog("GetAPPCTIVE", "294 - CREA ZIP");
 
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
-                filezip = activatePath + DateTime.Now.Ticks + ".zip";
+                filezip = activatePath + _entidades[0].cidapp + ".zip";
                 if (File.Exists(filezip)) { File.Delete(filezip); }
 
                 ZipFile.CreateFromDirectory(dirMaster, filezip);
