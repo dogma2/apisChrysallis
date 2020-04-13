@@ -67,6 +67,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -177,6 +178,7 @@
     </Compile>
     <Compile Include="Classes\AsociationDataes.cs" />
     <Compile Include="Classes\DeviceAppDataes.cs" />
+    <Compile Include="Classes\UserDataes.cs" />
     <Compile Include="Controllers\APPCTIVEController.cs" />
     <Compile Include="Controllers\APPDATEController.cs" />
     <Compile Include="Controllers\APPSSISTANTSController.cs" />
@@ -342,6 +344,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
