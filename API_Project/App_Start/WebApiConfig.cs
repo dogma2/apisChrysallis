@@ -21,7 +21,6 @@ namespace API_Project
 
             //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.All; // Evitar referencia circular
             //json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.Objects; // Evitar referencia circular para c/objeto
-            json.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None; // Evitar referencia circular
 
             config.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore; // otra opcion de estructura de datos referenciados en json
             config.Formatters.JsonFormatter.SerializerSettings.PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None; // otra opcion de estructura de datos referenciados en json
@@ -39,6 +38,21 @@ namespace API_Project
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+            // http://api.eevapp.es/api/APPCTIVE/active/mgoncevatt.cep@gmail.com/123456789012345
+            config.Routes.MapHttpRoute(
+                name: "GetAPPCTIVATE",
+                routeTemplate: "api/{controller}/active/{_email}/{_imei}",
+                defaults: null
+            );
+
+            // http://api.eevapp.es/api/APPCTIVE/key/mgoncevatt.cep@gmail.com/123456789012345
+            config.Routes.MapHttpRoute(
+                name: "PostAPPCTIVATE",
+                routeTemplate: "api/{controller}/key/{_email}/{_imei}",
+                defaults: null
+            );
+
         }
     }
 }
