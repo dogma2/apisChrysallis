@@ -41,9 +41,11 @@ namespace API_Project.Controllers
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE ->
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE ->
-        // http://api.eevapp.es/api/APPCTIVE/active/mgoncevatt.cep@mail.com/123456789012345
+        // http://api.eevapp.es/api/APPCTIVE/active/mgoncevatt.cep@gmail.com/123456789012345
         public HttpResponseMessage GetAPPCTIVE([FromUri] string _email, string _imei )
         {
+
+            db.Configuration.LazyLoadingEnabled = false;
 
             RegisterActionInLog("GetAPPCTIVE", "101 - " + _email + " | " + _imei);
 
@@ -51,7 +53,7 @@ namespace API_Project.Controllers
             string thecode = "";
             string actionResult = "";
             string filezip = "";
-            List<USUARIOS> _entidades = new List<USUARIOS>();
+            USUARIOS _entidad = new USUARIOS();
 
             // - - - - - getting data
             if (_email == null || _imei == null) { isOK = false; actionResult += " | email_imei = null"; }
@@ -60,42 +62,44 @@ namespace API_Project.Controllers
             // - - - - - control parametro
             if (isOK && _email != null)
             {
-                _entidades = (from e in db.USUARIOS where e.email.Equals(_email) select e).ToList();
 
-                // - - - - - control usuario existente
-                if (_entidades[0] != null)
-                {
+                try { _entidad = (from e in db.USUARIOS where e.email.Equals(_email) select e).First(); }
+                catch (Exception e) { isOK = false; }
+
+                // - - - - - control parametro
+                if (isOK && _entidad != null)
+                    {
 
                     // - - - - - control usuario activo
-                    if (_entidades[0].estado != 0)
+                    if (_entidad.estado != 0)
                     {
                         // - - - - - datos agrabar por activacion en socio
-                        _entidades[0].imei = _imei;
-                        _entidades[0].cidapp = getHashString(_imei);
-                        _entidades[0].fechaestado = (long)DateTime.Now.Ticks;
-                        _entidades[0].notaestado = "Activacion de app";
+                        _entidad.imei = _imei;
+                        _entidad.cidapp = getHashString(_imei);
+                        _entidad.fechaestado = (long)DateTime.Now.Ticks;
+                        _entidad.notaestado = "Activacion de app";
 
                         Random random = new Random();
                         int ops = random.Next(0, 120);
-                        thecode = _entidades[0].cidapp.Substring(ops, 6);
+                        thecode = _entidad.cidapp.Substring(ops, 6);
 
                         // - - - - - envía email
-                        isOK = emailActivationAppCode(_entidades[0].email, _entidades[0].idsocio, thecode);
+                        isOK = emailActivationAppCode(_entidad.email, _entidad.idsocio, thecode);
 
                         if (isOK)
                         {
                             // - - - - - graba activacion en socio
-                            db.Entry(_entidades[0]).State = EntityState.Modified;
+                            db.Entry(_entidad).State = EntityState.Modified;
                             try { db.SaveChanges(); }
-                            catch (DbUpdateConcurrencyException) { if (!USUARIOSExists(_entidades[0].id)) { isOK = false; actionResult += " | not USUARIOSExists"; } else { throw; } }
+                            catch (DbUpdateConcurrencyException) { if (!USUARIOSExists(_entidad.id)) { isOK = false; actionResult += " | not USUARIOSExists"; } else { throw; } }
                         }
                         else { isOK = false; actionResult += " | emailing error"; }
 
                     }
-                    else { isOK = false; actionResult += " | _entidades[0].estado = 0"; }
+                    else { isOK = false; actionResult += " | _entidad[0].estado = 0"; }
 
                 }
-                else { isOK = false; actionResult += " | _entidades[0] = null"; }
+                else { isOK = false; actionResult += " | _entidad[0] = null"; }
 
             }
             else { isOK = false; actionResult += " | isOK = false o _email = null"; }
@@ -127,7 +131,6 @@ namespace API_Project.Controllers
                     dirinfo = new System.IO.DirectoryInfo(activatePath);
                     foreach (System.IO.FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
 
-
                     RegisterActionInLog("GetAPPCTIVE", "194 - Directory.Exists(activatePath)");
 
                 }
@@ -157,7 +160,7 @@ namespace API_Project.Controllers
                 {
                     // - - - - - directory EEvaApp/Config: configuration data
                     UserDataes _appdata = new UserDataes();
-                    _appdata.m_cidapp = _entidades[0].cidapp;
+                    _appdata.m_cidapp = _entidad.cidapp;
                     _appdata.m_code = thecode;
                     _appdata.m_state = 0;
                     _appdata.m_date = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
@@ -197,8 +200,10 @@ namespace API_Project.Controllers
                 {
                     // - - - - - directory "EEvaApp/Xtras"
                     List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
+                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_dele);
+                    //List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
                     // - - - - - graba json en carpeta                
-                    var json_data02 = JToken.FromObject(_dele, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
+                    var json_data02 = JToken.FromObject(_olist);
                     fichero = File.CreateText(dirXtras + "Delegaciones" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data02.WriteTo(jsonwriter);
@@ -221,8 +226,10 @@ namespace API_Project.Controllers
                 try
                 {
                     List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
+                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_ccaa);
+                    //List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
                     // - - - - - graba json en carpeta                
-                    var json_data04 = JToken.FromObject(_ccaa, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
+                    var json_data04 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
                     fichero = File.CreateText(dirXtras + "Comunidades" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data04.WriteTo(jsonwriter);
@@ -233,8 +240,10 @@ namespace API_Project.Controllers
                 try
                 {
                     List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
+                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_prov);
+                    //List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
                     // - - - - - graba json en carpeta         
-                    var json_data05 = JToken.FromObject(_prov, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
+                    var json_data05 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
                     fichero = File.CreateText(dirXtras + "Provincias" + ".json");
                     jsonwriter = new JsonTextWriter(fichero);
                     json_data05.WriteTo(jsonwriter);
@@ -260,7 +269,7 @@ namespace API_Project.Controllers
                 RegisterActionInLog("GetAPPCTIVE", "294 - CREA ZIP");
 
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
-                filezip = zipFiles + _entidades[0].cidapp + ".zip";
+                filezip = zipFiles + _entidad.cidapp + ".zip";
                 if (File.Exists(filezip)) { File.Delete(filezip); }
 
                 ZipFile.CreateFromDirectory(activatePath, filezip);
@@ -268,14 +277,11 @@ namespace API_Project.Controllers
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
             }
 
-
-
             if (!isOK)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
-
                 RegisterActionInLog("GetAPPCTIVE", "309 - SALE ERROR");
 
+                return Request.CreateResponse(HttpStatusCode.NoContent);
             }
             else
             {
@@ -306,6 +312,8 @@ namespace API_Project.Controllers
         // http://api.eevapp.es/api/APPCTIVE/key/mgoncevatt.cep@gmail.com/123456789012345
         public HttpResponseMessage PostAPPCTIVE([FromUri] string _email, string _imei)
         {
+
+            db.Configuration.LazyLoadingEnabled = false;
 
             RegisterActionInLog("GetAPPCTIVE", "101 - " + _email + " | " + _imei);
 

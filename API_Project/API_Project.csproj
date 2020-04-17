@@ -179,6 +179,7 @@
     <Compile Include="Classes\ActivatePair.cs" />
     <Compile Include="Classes\AsociationDataes.cs" />
     <Compile Include="Classes\DeviceAppDataes.cs" />
+    <Compile Include="Classes\IdNameObj.cs" />
     <Compile Include="Classes\UserDataes.cs" />
     <Compile Include="Controllers\APPCTIVEController.cs" />
     <Compile Include="Controllers\APPDATEController.cs" />
