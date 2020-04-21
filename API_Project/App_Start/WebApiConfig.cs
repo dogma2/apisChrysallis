@@ -53,6 +53,13 @@ namespace API_Project
                 defaults: null
             );
 
+            // http://api.eevapp.es/api/APPDATE/update/timestamp/123456789012345/1$2_1_1
+            config.Routes.MapHttpRoute(
+                name: "GetAPPDATE",
+                routeTemplate: "api/{controller}/update/{_date}/{_imei}/{_search}",
+                defaults: null
+            );
+
         }
     }
 }
