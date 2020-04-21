@@ -115,42 +115,41 @@ namespace API_Project.Controllers
                     {
                     /* Elemento final(_search), tiene que ser 3 array de ints, posible null:
                     * Usados para hacer las consultas --> Delegación, comunidad, provincia
-                    * string data = "there is a cat";
-
-    // Part 2: split string on spaces (this will separate all the words).
-    string[] words = data.Split(' ');
-
-    // Part 3: loop over result array.
-    foreach (string word in words)
-    {
-        Console.WriteLine("WORD: " + word);
-    }
                     */
                     string[] locationData = _search.Split('_');
                     string[] delgaciones = locationData[0].Split('$');
                     // - - - - - directory "EEvaApp/Datas"
-                    List<EVENTOS> _event = (from e in db.EVENTOS orderby e.fechainicio where e.estado == 1 e. select e).ToList(); //Formato LinQ
-                        List<EventsJson> _olist = IdNameObj.Dele2IdNameObj(_event); //De cada evento, se genera un json
-                        //Trabajo sobre listas
-                        List<EventsJsonReducido> _rlist = new List<EventsJsonReducido>();
-                        EventsJsonReducido r;
-                        foreach (EventsJson e in _olist) {
-                            r = new EventsJsonReducido();
-                            e.reduceData(r);
-                            _rlist.Add(r);
-                        }
-                        // - - - - - graba datos completos           
-                        var json_data02 = JToken.FromObject(_olist);
-                        fichero = File.CreateText(dirDatas + "Eventos" + ".json");
+                    List<EVENTOS> _event = (from e in db.EVENTOS orderby e.fechainicio where e.estado == 1 && e.comunidad == locationData[1] && e.provincia == locationData[2] select e).ToList(); //Formato LinQ
+                    List<EventsJson> _olist = IdNameObj.Events2IdNameObj(_event); //De cada evento, se genera un json
+                    //Trabajo sobre listas
+                    List<EventsJsonReducido> _rlist = new List<EventsJsonReducido>();
+                    EventsJsonReducido r;
+                    foreach (EventsJson e in _olist) {
+                        r = new EventsJsonReducido();
+                        e.reduceData(r);
+                        _rlist.Add(r);
+                    }
+                    // - - - - - graba datos completos         
+                    var jsonData;
+                    foreach (EventsJson e in _olist)
+                    {
+                        jsonData = JToken.FromObject(e);
+                        fichero = File.CreateText(dirDatas + "Evento" + e.id + ".json");
                         jsonwriter = new JsonTextWriter(fichero);
-                        json_data02.WriteTo(jsonwriter);
+                        jsonData.WriteTo(jsonwriter);
                         jsonwriter.Close();
-                        // - - - - - graba json datos reducidos
-                        json_data02 = JToken.FromObject(_rlist);
-                        fichero = File.CreateText(dirDatas + "DatosEventos" + ".json");
-                        jsonwriter = new JsonTextWriter(fichero);
-                        json_data02.WriteTo(jsonwriter);
-                        jsonwriter.Close();
+                    }
+                    //var json_data02 = JToken.FromObject(_olist);
+                    //fichero = File.CreateText(dirDatas + "Eventos" + ".json");
+                    //jsonwriter = new JsonTextWriter(fichero);
+                    //json_data02.WriteTo(jsonwriter);
+                    //jsonwriter.Close();
+                    // - - - - - graba json datos reducidos
+                    json_data02 = JToken.FromObject(_rlist);
+                    fichero = File.CreateText(dirDatas + "DatosEventos" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_data02.WriteTo(jsonwriter);
+                    jsonwriter.Close();
                 }
                     catch (Exception e) { RegisterActionInLog("GetAPPDATE", "253 - Error !" + e.ToString()); }
 
@@ -169,6 +168,15 @@ namespace API_Project.Controllers
 
                     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena //
 
+                    List<DATOSINTERES> _data = (from e in db.DATOSINTERES orderby e.id select e).ToList(); //Formato LinQ
+                    List<InterestDataJson> _dlist = IdNameObj.InterestData2IdNameObj(_data);
+
+                    var json_interesdata = JToken.FromObject(_dlist);
+                    fichero = File.CreateText(dirDatas + "DatosInteres" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_interesdata.WriteTo(jsonwriter);
+                    jsonwriter.Close();
+
                     RegisterActionInLog("GetAPPDATE", "294 - CREA ZIP");
 
                     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
@@ -177,7 +185,7 @@ namespace API_Project.Controllers
 
                     ZipFile.CreateFromDirectory(activatePath, filezip);
 
-                    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
+                    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP //
                 }
 
                 if (!isOK)
