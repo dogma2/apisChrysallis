@@ -120,7 +120,7 @@ namespace API_Project.Controllers
                     string[] delgaciones = locationData[0].Split('$');
                     // - - - - - directory "EEvaApp/Datas"
                     List<EVENTOS> _event = (from e in db.EVENTOS orderby e.fechainicio where e.estado == 1 && e.comunidad == locationData[1] && e.provincia == locationData[2] select e).ToList(); //Formato LinQ
-                    List<EventsJson> _olist = IdNameObj.Dele2IdNameObj(_event); //De cada evento, se genera un json
+                    List<EventsJson> _olist = IdNameObj.Events2IdNameObj(_event); //De cada evento, se genera un json
                     //Trabajo sobre listas
                     List<EventsJsonReducido> _rlist = new List<EventsJsonReducido>();
                     EventsJsonReducido r;
@@ -169,7 +169,7 @@ namespace API_Project.Controllers
                     // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena //
 
                     List<DATOSINTERES> _data = (from e in db.DATOSINTERES orderby e.id select e).ToList(); //Formato LinQ
-                    List<InterestDataJson> _dlist = IdNameObj.Dele2IdNameObj(_data);
+                    List<InterestDataJson> _dlist = IdNameObj.InterestData2IdNameObj(_data);
 
                     var json_interesdata = JToken.FromObject(_dlist);
                     fichero = File.CreateText(dirDatas + "DatosInteres" + ".json");
