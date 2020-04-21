@@ -92,13 +92,13 @@ namespace API_Project.Controllers
                     {
                         // crea directorio
                         try { Directory.CreateDirectory(dirMaster); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "200 - Error !"); }
-                        try { Directory.CreateDirectory(dirConfig); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "201 - Error !"); }
-                        try { Directory.CreateDirectory(dirXtras); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "202 - Error !"); }
+                        //try { Directory.CreateDirectory(dirConfig); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "201 - Error !"); }
+                        //try { Directory.CreateDirectory(dirXtras); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "202 - Error !"); }
                         try { Directory.CreateDirectory(dirDatas); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "203 - Error !"); }
                         try { Directory.CreateDirectory(dirImages); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "204 - Error !"); }
-                        try { Directory.CreateDirectory(dirWork); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "205 - Error !"); }
-                        try { Directory.CreateDirectory(dirZipped); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "206 - Error !"); }
-                        try { Directory.CreateDirectory(dirUnzipped); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "207 - Error !"); }
+                        //try { Directory.CreateDirectory(dirWork); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "205 - Error !"); }
+                        //try { Directory.CreateDirectory(dirZipped); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "206 - Error !"); }
+                        //try { Directory.CreateDirectory(dirUnzipped); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "207 - Error !"); }
 
                         RegisterActionInLog("GetAPPDATE", "209 - CREA DIR");
 
