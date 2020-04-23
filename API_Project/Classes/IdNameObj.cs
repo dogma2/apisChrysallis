@@ -48,25 +48,5 @@ namespace API_Project.Classes
             return _retu;
         }
 
-        public static List<IdNameObj> Events2IdNameObj(List<EVENTOS> _listOb)
-        {
-            List<IdNameObj> _retu = new List<IdNameObj>();
-            foreach (EVENTOS o in _listOb)
-            {
-                _retu.Add(new IdNameObj(o.id, o.nombre));
-            }
-            return _retu;
-        }
-
-        public static List<IdNameObj> InterestData2IdNameObj(List<DATOSINTERES> _listOb)
-        {
-            List<IdNameObj> _retu = new List<IdNameObj>();
-            foreach (DATOSINTERES o in _listOb)
-            {
-                _retu.Add(new IdNameObj(o.id, o.nombre));
-            }
-            return _retu;
-        }
-
     }
 }

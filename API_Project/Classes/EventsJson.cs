@@ -9,34 +9,46 @@ namespace API_Project.Classes
     {
         public int id { get; set; }
         public string cidevento { get; set; }
-        public byte estado { get; set; }
+        public int estado { get; set; }
         public string titulo { get; set; }
         public string intro { get; set; }
         public string descripcion { get; set; }
-        public System.DateTime fechainicio { get; set; }
-        public System.TimeSpan horainicio { get; set; }
-        public System.DateTime fechafin { get; set; }
-        public System.TimeSpan horafin { get; set; }
-        public byte[] imagen { get; set; }
+        public string fechainicio { get; set; }
+        public string horainicio { get; set; }
+        public string fechafin { get; set; }
+        public string horafin { get; set; }
         public string notasevento { get; set; }
         public string notastransporte { get; set; }
-        public byte idccaa { get; set; }
-        public byte idprovincia { get; set; }
+        public int idccaa { get; set; }
+        public int idprovincia { get; set; }
         public string ciudad { get; set; }
         public string coordgps { get; set; }
-        public byte ctrlglobal { get; set; }
+        public int ctrlglobal { get; set; }
         public int iddelegacion { get; set; }
-        public int iddsktuser { get; set; }
         public int asist { get; set; }
 
-        public void reduceData(EventsJsonReducido evento)
+        public EventsJson(EVENTOS evento)
         {
-            evento.id = this.id;
-            evento.titulo = this.titulo;
-            evento.intro = this.intro;
-            evento.fechainicio = this.fechainicio;
-            evento.horainicio = this.horainicio;
-            evento.asist = this.asist;
-    }
+            this.id = evento.id;
+            this.cidevento = evento.cidevento;
+            this.estado = (int)evento.estado;
+            this.titulo = evento.titulo;
+            this.intro = evento.intro;
+            this.descripcion = evento.descripcion;
+            this.fechainicio = evento.fechainicio.ToString();
+            this.horainicio = evento.horainicio.ToString();
+            this.fechafin = evento.fechafin.ToString();
+            this.horafin = evento.horafin.ToString();
+            this.notasevento = evento.notasevento;
+            this.notastransporte = evento.notastransporte;
+            this.idccaa = (int)evento.idccaa;
+            this.idprovincia = (int)evento.idprovincia;
+            this.ciudad = evento.ciudad;
+            this.coordgps = evento.coordgps;
+            this.ctrlglobal = (int)evento.ctrlglobal;
+            this.iddelegacion = (int)evento.iddelegacion;
+            this.asist = 0;
+        }
+
     }
 }

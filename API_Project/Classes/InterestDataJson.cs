@@ -19,5 +19,32 @@ namespace API_Project.Classes
         public string email { get; set; }
         public string contacto { get; set; }
         public int iddelegacion { get; set; }
+
+        public InterestDataJson(DATOSINTERES d)
+        {
+            this.id = d.id;
+            this.nombre = d.nombre;
+            this.descripcion = d.descripcion;
+            this.direccion = d.direccion;
+            this.ciudad = d.ciudad;
+            this.cp = d.cp;
+            this.idprovincia = (int)d.idprovincia;
+            this.idccaa = (int)d.idccaa;
+            this.telefono = d.telefono;
+            this.email = d.email;
+            this.contacto = d.contacto;
+            this.iddelegacion = (int)d.iddelegacion;
+        }
+
+        public static List<InterestDataJson> Di2Idj(List<DATOSINTERES> datointeres)
+        {
+            List<InterestDataJson> retu = new List<InterestDataJson>();
+            foreach (DATOSINTERES d in datointeres)
+            {
+                retu.Add(new InterestDataJson(d));
+            }
+            return retu;
+        }
+
     }
 }
