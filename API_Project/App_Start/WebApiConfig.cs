@@ -46,17 +46,17 @@ namespace API_Project
                 defaults: null
             );
 
-            // http://api.eevapp.es/api/APPCTIVE/key/mgoncevatt.cep@gmail.com/123456789012345
-            config.Routes.MapHttpRoute(
-                name: "PostAPPCTIVATE",
-                routeTemplate: "api/{controller}/key/{_email}/{_imei}",
-                defaults: null
-            );
-
             // http://api.eevapp.es/api/APPDATE/update/timestamp/123456789012345/1$2_1_1
             config.Routes.MapHttpRoute(
                 name: "GetAPPDATE",
                 routeTemplate: "api/{controller}/update/{_date}/{_imei}/{_search}",
+                defaults: null
+            );
+
+            // http://api.eevapp.es/api/STATE/action/123456789012345
+            config.Routes.MapHttpRoute(
+                name: "GetSTATE",
+                routeTemplate: "api/{controller}/action/{_imei}",
                 defaults: null
             );
 

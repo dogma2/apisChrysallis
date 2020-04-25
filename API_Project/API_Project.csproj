@@ -197,6 +197,7 @@
     <Compile Include="Controllers\final.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PROVINCIASController.cs" />
+    <Compile Include="Controllers\STATEController.cs" />
     <Compile Include="Controllers\UPCONFIGController.cs" />
     <Compile Include="Controllers\UPDATASController.cs" />
     <Compile Include="Controllers\USUARIOSController.cs" />
