@@ -69,39 +69,35 @@ namespace API_Project.Controllers
 
             RegisterActionInLog("GetAPPDATE", "67 - " + actionResult);
 
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios ->
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera directorios ->
 
             // - - - - - Estructura de carpetas
             string basePath = "C:\\inetpub\\vhosts\\eevapp.es\\httpdocs\\dataXport_EEvApp\\";
-            string updatePath = basePath + "UpdateWork\\";
             string zipFiles = basePath + "zipFiles\\";
+            string updatePath = basePath + "UpdateWork\\";
             string dirMaster = updatePath + "EEvaApp\\"; // - - - - - dirMaster
+            string dirXtras = dirMaster + "Xtras\\"; // - - - - - dirXtras
             string dirDatas = dirMaster + "Datas\\"; // - - - - - dirDatas --> Eventos.json y datosinteres.json
             string dirImages = dirDatas + "Images\\"; // - - - - - dirImages --> iMÁGENES EVENTOS
 
             // - - - - - prepara carpeta export
-            if (Directory.Exists(dirDatas))
-            {
-                System.IO.DirectoryInfo dirinfo;
-                // elimina archivos contenidos para generar nuevos
-                dirinfo = new DirectoryInfo(dirDatas);
-                foreach (FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
-                dirinfo = new DirectoryInfo(dirImages);
-                foreach (FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
+            DirectoryInfo workdir;
 
-                RegisterActionInLog("GetAPPDATE", "88 - Directory.Exists(activatePath)");
-            }
-            else
-            {
-                // crea directorio
-                try { Directory.CreateDirectory(dirMaster); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "200 - Error !"); }
-                try { Directory.CreateDirectory(dirDatas); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "203 - Error !"); }
-                try { Directory.CreateDirectory(dirImages); } catch (Exception e) { RegisterActionInLog("GetAPPDATE", "204 - Error !"); }
+            // zipFiles
+            if (!Directory.Exists(zipFiles)) { try { Directory.CreateDirectory(zipFiles); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create zipFiles - Error !"); } }
+            // dirMaster
+            if (!Directory.Exists(dirMaster)) { try { Directory.CreateDirectory(dirMaster); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirMaster - Error !"); } }
+            // dirXtras
+            if (!Directory.Exists(dirXtras)) { try { Directory.CreateDirectory(dirXtras); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirXtras - Error !"); } }
+            else { workdir = new DirectoryInfo(dirXtras); foreach (FileInfo file in workdir.GetFiles()) { file.Delete(); } }
+            // dirDatas
+            if (!Directory.Exists(dirDatas)) { try { Directory.CreateDirectory(dirDatas); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirDatas - Error !"); } }
+            else { workdir = new DirectoryInfo(dirDatas); foreach (FileInfo file in workdir.GetFiles()) { file.Delete(); } }
+            // dirImages
+            if (!Directory.Exists(dirImages)) { try { Directory.CreateDirectory(dirImages); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirImages - Error !"); } }
+            else { workdir = new DirectoryInfo(dirImages); foreach (FileInfo file in workdir.GetFiles()) { file.Delete(); } }
 
-                RegisterActionInLog("GetAPPDATE", "96 - CREA DIR");
-
-            }
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios //
+            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera directorios //
 
             // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena ->
             StreamWriter fichero;
@@ -199,6 +195,69 @@ namespace API_Project.Controllers
                 }
                 catch (Exception e) { RegisterActionInLog("GetAPPDATE", "253 - Error !" + e.ToString()); }
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - JSON DATOSINTERES //
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DELEGACIONES ->
+                try
+                {
+                    // - - - - - directory "EEvaApp/Xtras"
+                    List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
+                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_dele);
+                    //List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
+                    // - - - - - graba json en carpeta                
+                    var json_data02 = JToken.FromObject(_olist);
+                    fichero = File.CreateText(dirXtras + "Delegaciones" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_data02.WriteTo(jsonwriter);
+                    jsonwriter.Close();
+                }
+                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "253 - Error !" + e.ToString()); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DELEGACIONES //
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - IDIOMAS ->
+                try
+                {
+                    List<IDIOMAS> _lang = (from e in db.IDIOMAS orderby e.nombre select e).ToList();
+                    // - - - - - graba json en carpeta                
+                    var json_data03 = JToken.FromObject(_lang);
+                    fichero = File.CreateText(dirXtras + "Idiomas" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_data03.WriteTo(jsonwriter);
+                    jsonwriter.Close();
+                }
+                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "261 - Error !" + e.ToString()); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - IDIOMAS ->
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CCAA ->
+                try
+                {
+                    List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
+                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_ccaa);
+                    //List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
+                    // - - - - - graba json en carpeta                
+                    var json_data04 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
+                    fichero = File.CreateText(dirXtras + "Comunidades" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_data04.WriteTo(jsonwriter);
+                    jsonwriter.Close();
+                }
+                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "273 - Error !" + e.ToString()); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CCAA ->
+
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PROVINCIAS ->
+                try
+                {
+                    List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.idccaa,e.nombre select e).ToList();
+                    List<ProvinciasJson> _olist = ProvinciasJson.Prov2Pjs(_prov);
+                    //List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
+                    // - - - - - graba json en carpeta         
+                    var json_data05 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
+                    fichero = File.CreateText(dirXtras + "Provincias" + ".json");
+                    jsonwriter = new JsonTextWriter(fichero);
+                    json_data05.WriteTo(jsonwriter);
+                    jsonwriter.Close();
+                }
+                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "284 - Error !" + e.ToString()); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PROVINCIAS ->
 
             }
 

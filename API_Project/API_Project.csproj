@@ -183,6 +183,7 @@
     <Compile Include="Classes\EventsJsonReducido.cs" />
     <Compile Include="Classes\IdNameObj.cs" />
     <Compile Include="Classes\InterestDataJson.cs" />
+    <Compile Include="Classes\ProvinciasJson.cs" />
     <Compile Include="Classes\UserDataes.cs" />
     <Compile Include="Controllers\APPCTIVEController.cs" />
     <Compile Include="Controllers\APPDATEController.cs" />

@@ -46,7 +46,7 @@ namespace API_Project.Controllers
 
             db.Configuration.LazyLoadingEnabled = false;
 
-            RegisterActionInLog("GetAPPCTIVE", "101 - " + _email + " | " + _imei);
+            RegisterActionInLog("GetAPPCTIVE", "49 - " + _email + " | " + _imei);
 
             bool isOK = true;
             string thecode = "";
@@ -108,53 +108,36 @@ namespace API_Project.Controllers
             if (isOK)
             {
 
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios ->
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera directorios ->
+
                 // - - - - - Estructura de carpetas
                 string basePath = "C:\\inetpub\\vhosts\\eevapp.es\\httpdocs\\dataXport_EEvApp\\";
-                string activatePath = basePath + "ActivateWork\\";
-                string updatePath = basePath + "UpdateWork\\";
                 string zipFiles = basePath + "zipFiles\\";
+                string activatePath = basePath + "ActivateWork\\";
                 string dirMaster = activatePath + "EEvaApp\\"; // - - - - - dirMaster
                 string dirConfig = dirMaster + "Config\\"; // - - - - - dirConfig
-                string dirXtras = dirMaster + "Xtras\\"; // - - - - - dirXtras
-                string dirDatas = dirMaster + "Datas\\"; // - - - - - dirDatas
-                string dirImages = dirDatas + "Images\\"; // - - - - - dirImages
-                string dirWork = dirMaster + "Work\\"; // - - - - - dirWork
-                string dirZipped = dirMaster + "Zipped\\"; // - - - - - dirZipped
-                string dirUnzipped = dirMaster + "Unzipped\\"; // - - - - - dirUnzipped
+
                 // - - - - - prepara carpeta export
-                if (Directory.Exists(dirMaster))
-                {
-                    System.IO.DirectoryInfo dirinfo;
-                    // elimina archivos contenidos para generar nuevos
-                    dirinfo = new System.IO.DirectoryInfo(activatePath);
-                    foreach (System.IO.FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
+                DirectoryInfo workdir;
 
-                    RegisterActionInLog("GetAPPCTIVE", "194 - Directory.Exists(activatePath)");
+                // zipFiles
+                if (!Directory.Exists(zipFiles)) { try { Directory.CreateDirectory(zipFiles); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create zipFiles - Error !"); } }
+                // dirMaster
+                if (!Directory.Exists(dirMaster)) { try { Directory.CreateDirectory(dirMaster); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirMaster - Error !"); } }
+                // dirConfig
+                if (!Directory.Exists(dirConfig)) { try { Directory.CreateDirectory(dirConfig); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "create dirConfig - Error !"); } }
+                else { workdir = new DirectoryInfo(dirConfig); foreach (FileInfo file in workdir.GetFiles()) { file.Delete(); } }
 
-                }
-                else
-                {
-                    // crea directorio
-                    try { Directory.CreateDirectory(dirMaster); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "200 - Error !"); }
-                    try { Directory.CreateDirectory(dirConfig); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "201 - Error !"); }
-                    try { Directory.CreateDirectory(dirXtras); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "202 - Error !"); }
-                    try { Directory.CreateDirectory(dirDatas); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "203 - Error !"); }
-                    try { Directory.CreateDirectory(dirImages); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "204 - Error !"); }
-                    try { Directory.CreateDirectory(dirWork); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "205 - Error !"); }
-                    try { Directory.CreateDirectory(dirZipped); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "206 - Error !"); }
-                    try { Directory.CreateDirectory(dirUnzipped); } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "207 - Error !"); }
+                RegisterActionInLog("GetAPPCTIVE", "133 - CREA DIR");
 
-                    RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
-
-                }
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios //
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera directorios //
 
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena ->
                 StreamWriter fichero;
                 JsonTextWriter jsonwriter;
                 List<PairIdName> pairs = new List<PairIdName>();
 
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - APPDATA ->
                 try
                 {
                     // - - - - - directory EEvaApp/Config: configuration data
@@ -174,7 +157,9 @@ namespace API_Project.Controllers
                     jsonwriter.Close();
                 }
                 catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "UserDataes - Error !"); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - APPDATA //
 
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CONFIG ->
                 try
                 {
                     if (File.Exists(basePath + "config.json"))
@@ -184,7 +169,9 @@ namespace API_Project.Controllers
                     }
                 }
                 catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "config - Error !" + e.ToString()); }
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CONFIG //
 
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DATAS ->
                 try
                 {
                     if (File.Exists(basePath + "datas.json"))
@@ -194,74 +181,7 @@ namespace API_Project.Controllers
                     }
                 }
                 catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "datas - Error !" + e.ToString()); }
-
-                try
-                {
-                    // - - - - - directory "EEvaApp/Xtras"
-                    List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
-                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_dele);
-                    //List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data02 = JToken.FromObject(_olist);
-                    fichero = File.CreateText(dirXtras + "Delegaciones" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data02.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "253 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<IDIOMAS> _lang = (from e in db.IDIOMAS orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data03 = JToken.FromObject(_lang);
-                    fichero = File.CreateText(dirXtras + "Idiomas" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data03.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "261 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
-                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_ccaa);
-                    //List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data04 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
-                    fichero = File.CreateText(dirXtras + "Comunidades" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data04.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "273 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
-                    List<IdNameObj> _olist = IdNameObj.Dele2IdNameObj(_prov);
-                    //List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta         
-                    var json_data05 = JToken.FromObject(_olist, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore, PreserveReferencesHandling = Newtonsoft.Json.PreserveReferencesHandling.None });
-                    fichero = File.CreateText(dirXtras + "Provincias" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data05.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "284 - Error !" + e.ToString()); }
-
-
-                // - - - - - directory EEvaApp/Data: app data (events & interestdata)
-                //    string json_events = "{}";
-
-
-                // - - - - - graba imagenes
-                //if (File.Exists(imagespath + "appimage" + expo.Id + ".jpg"))
-                //{
-                //    File.Copy(imagespath + "appimage" + expo.Id + ".jpg", xprtelements + @"\" + "appimage" + ".jpg");
-                //}
-
-                // string json_interestdata = "{}";
+                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - DATAS //
 
                 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena //
 
@@ -302,264 +222,8 @@ namespace API_Project.Controllers
             }
 
         }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE //
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE //
-
-
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE ->
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE ->
-        // http://api.eevapp.es/api/APPCTIVE/key/mgoncevatt.cep@gmail.com/123456789012345
-        public HttpResponseMessage PostAPPCTIVE([FromUri] string _email, string _imei)
-        {
-
-            db.Configuration.LazyLoadingEnabled = false;
-
-            RegisterActionInLog("GetAPPCTIVE", "101 - " + _email + " | " + _imei);
-
-            bool isOK = true;
-            string thecode = "";
-            string actionResult = "";
-            string filezip = "";
-            List<USUARIOS> _entidades = new List<USUARIOS>();
-
-            // - - - - - getting data
-            if (_email == null || _imei == null) { isOK = false; actionResult += " | email_imei = null"; }
-
-
-            // - - - - - control parametro
-            if (isOK && _email != null)
-            {
-                _entidades = (from e in db.USUARIOS where e.email.Equals(_email) select e).ToList();
-
-                // - - - - - control usuario existente
-                if (_entidades[0] != null)
-                {
-
-                    // - - - - - control usuario activo
-                    if (_entidades[0].estado != 0)
-                    {
-                        // - - - - - datos agrabar por activacion en socio
-                        _entidades[0].imei = _imei;
-                        _entidades[0].cidapp = getHashString(_imei);
-                        _entidades[0].fechaestado = (long)DateTime.Now.Ticks;
-                        _entidades[0].notaestado = "Activacion de app";
-
-                        Random random = new Random();
-                        int ops = random.Next(0, 120);
-                        thecode = _entidades[0].cidapp.Substring(ops, 6);
-
-                        // - - - - - envía email
-                        isOK = emailActivationAppCode(_entidades[0].email, _entidades[0].idsocio, thecode);
-
-                        if (isOK)
-                        {
-                            // - - - - - graba activacion en socio
-                            db.Entry(_entidades[0]).State = EntityState.Modified;
-                            try { db.SaveChanges(); }
-                            catch (DbUpdateConcurrencyException) { if (!USUARIOSExists(_entidades[0].id)) { isOK = false; actionResult += " | not USUARIOSExists"; } else { throw; } }
-                        }
-                        else { isOK = false; actionResult += " | emailing error"; }
-
-                    }
-                    else { isOK = false; actionResult += " | _entidades[0].estado = 0"; }
-
-                }
-                else { isOK = false; actionResult += " | _entidades[0] = null"; }
-
-            }
-            else { isOK = false; actionResult += " | isOK = false o _email = null"; }
-
-RegisterActionInLog("GetAPPCTIVE", "167 - " + actionResult);
-
-            if (isOK)
-            {
-
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios ->
-                // - - - - - Estructura de carpetas
-                string basePath = "C:\\inetpub\\vhosts\\eevapp.es\\httpdocs\\dataXport_EEvApp\\";
-                string activatePath = basePath + "ActivateWork\\";
-                string updatePath = basePath + "UpdateWork\\";
-                string zipFiles = basePath + "zipFiles\\";
-                string dirMaster = activatePath + "EEvaApp\\"; // - - - - - dirMaster
-                string dirConfig = dirMaster + "Config\\"; // - - - - - dirConfig
-                string dirXtras = dirMaster + "Xtras\\"; // - - - - - dirXtras
-                string dirDatas = dirMaster + "Datas\\"; // - - - - - dirDatas
-                string dirImages = dirDatas + "Images\\"; // - - - - - dirImages
-                string dirWork = dirMaster + "Work\\"; // - - - - - dirWork
-                string dirZipped = dirMaster + "Zipped\\"; // - - - - - dirZipped
-                string dirUnzipped = dirMaster + "Unzipped\\"; // - - - - - dirUnzipped
-                // - - - - - prepara carpeta export
-                if (Directory.Exists(dirMaster))
-                {
-                    System.IO.DirectoryInfo dirinfo;
-                    // elimina archivos contenidos para generar nuevos
-                    dirinfo = new System.IO.DirectoryInfo(activatePath);
-                    foreach (System.IO.FileInfo file in dirinfo.GetFiles()) { file.Delete(); }
-
-
-RegisterActionInLog("GetAPPCTIVE", "194 - Directory.Exists(activatePath)");
-
-                }
-                else
-                {
-                    // crea directorio
-                    try { Directory.CreateDirectory(dirMaster); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "200 - Error !"); }
-                    try { Directory.CreateDirectory(dirConfig); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "201 - Error !"); }
-                    try { Directory.CreateDirectory(dirXtras); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "202 - Error !"); }
-                    try { Directory.CreateDirectory(dirDatas); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "203 - Error !"); }
-                    try { Directory.CreateDirectory(dirImages); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "204 - Error !"); }
-                    try { Directory.CreateDirectory(dirWork); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "205 - Error !"); }
-                    try { Directory.CreateDirectory(dirZipped); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "206 - Error !"); }
-                    try { Directory.CreateDirectory(dirUnzipped); } catch ( Exception e ) { RegisterActionInLog("GetAPPCTIVE", "207 - Error !"); }
-
-RegisterActionInLog("GetAPPCTIVE", "209 - CREA DIR");
-
-                }
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Elimina y regenera directorios //
-
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena ->
-                StreamWriter fichero;
-                JsonTextWriter jsonwriter;
-
-                try {
-                    // - - - - - directory EEvaApp/Config: configuration data
-                    UserDataes _appdata = new UserDataes();
-                    _appdata.m_cidapp = _entidades[0].cidapp;
-                    _appdata.m_code = thecode;
-                    _appdata.m_state = 0;
-                    _appdata.m_date = (int)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                    _appdata.m_updated = _appdata.m_date;
-                    _appdata.m_result = 0;
-                    _appdata.m_next = _appdata.m_date;
-                    // - - - - - graba json en carpeta                
-                    var json_data01 = JToken.FromObject(_appdata);
-                    fichero = File.CreateText(dirConfig + "appData" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data01.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "UserDataes - Error !"); }
-
-                try {
-                    if (File.Exists(basePath + "config.json"))
-                    {
-                        if (File.Exists(dirConfig + "config.json")) { File.Delete(dirConfig + "config.json"); }
-                        File.Copy(basePath + "config.json", dirConfig + "config.json");
-                    }
-                } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "config - Error !" + e.ToString()); }
-
-                try {
-                    if (File.Exists(basePath + "datas.json"))
-                    {
-                        if (File.Exists(dirConfig + "datas.json")) { File.Delete(dirConfig + "datas.json"); }
-                        File.Copy(basePath + "datas.json", dirConfig + "datas.json");
-                    }
-                } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "datas - Error !" + e.ToString()); }
-
-                try
-                {
-                    // - - - - - directory "EEvaApp/Xtras"
-                    List<DELEGACIONES> _dele = (from e in db.DELEGACIONES orderby e.nombre where e.estado == 1 select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data02 = JToken.FromObject(_dele, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                    fichero = File.CreateText(dirXtras + "Delegaciones" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data02.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                } catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "253 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<IDIOMAS> _lang = (from e in db.IDIOMAS orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data03 = JToken.FromObject(_lang);
-                    fichero = File.CreateText(dirXtras + "Idiomas" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data03.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "261 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<CCAA> _ccaa = (from e in db.CCAA orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta                
-                    var json_data04 = JToken.FromObject(_ccaa, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                    fichero = File.CreateText(dirXtras + "Comunidades" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data04.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "273 - Error !" + e.ToString()); }
-
-                try
-                {
-                    List<PROVINCIAS> _prov = (from e in db.PROVINCIAS orderby e.nombre select e).ToList();
-                    // - - - - - graba json en carpeta         
-                    var json_data05 = JToken.FromObject(_prov, new JsonSerializer() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
-                    fichero = File.CreateText(dirXtras + "Provincias" + ".json");
-                    jsonwriter = new JsonTextWriter(fichero);
-                    json_data05.WriteTo(jsonwriter);
-                    jsonwriter.Close();
-                }
-                catch (Exception e) { RegisterActionInLog("GetAPPCTIVE", "284 - Error !" + e.ToString()); }
-
-
-                // - - - - - directory EEvaApp/Data: app data (events & interestdata)
-                //    string json_events = "{}";
-
-
-                // - - - - - graba imagenes
-                //if (File.Exists(imagespath + "appimage" + expo.Id + ".jpg"))
-                //{
-                //    File.Copy(imagespath + "appimage" + expo.Id + ".jpg", xprtelements + @"\" + "appimage" + ".jpg");
-                //}
-
-                // string json_interestdata = "{}";
-
-            // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera JSons y almacena //
-
-            RegisterActionInLog("GetAPPCTIVE", "294 - CREA ZIP");
-
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
-                filezip = zipFiles + _entidades[0].cidapp + ".zip";
-                if (File.Exists(filezip)) { File.Delete(filezip); }
-
-                ZipFile.CreateFromDirectory(activatePath, filezip);
-
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - genera ZIP ->
-            }
-
-
-
-            if (!isOK) { return Request.CreateResponse(HttpStatusCode.BadRequest);
-
-RegisterActionInLog("GetAPPCTIVE", "309 - SALE ERROR");
-
-            }
-            else
-            {
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - RETURN FILE ->
-
-                FileInfo infozip = new FileInfo(filezip);
-                // localFilePath = getFileFromID(id, out infozip.Name, out infozip.Length);
-                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
-                response.Content = new StreamContent(new FileStream(filezip, FileMode.Open, FileAccess.Read));
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-                response.Content.Headers.ContentDisposition.FileName = infozip.Name;
-                response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
-
-RegisterActionInLog("GetAPPCTIVE", "324 - RETORNA ARCHIVO");
-
-                return response;
-
-                // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - RETURN FILE //
-            }
-
-        }
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE //
-        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - PostAPPCTIVE //
-
-
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GetAPPCTIVE //
+        // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - GetAPPCTIVE //
 
         // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - retorna string en hash512 ->
         public static String getHashString(String pass)
